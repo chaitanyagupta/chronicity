@@ -1,0 +1,27 @@
+#+STARTUP: showall
+
+* Elements
+** Repeater 
+January, February, etc.
+Monday, Tuesday, etc.
+Days
+Day of week
+Hours - 5:00PM
+** Grabber
+last, this, next 
+** Pointer
+past, future, in, from
+** Scalar
+Numbers, 1-31, 1-12, etc
+** Ordinal
+1st, 2nd, 3rd, etc.
+** Separator
+, / - etc.
+** TimeZone
+IST, GMT, etc.
+
+* TODOs
+** Regex (foo|bar) in SLIME
+** Bug in test_offset of test_RepeaterFortnight.rb
+** Handle ambiguous times (12:34, etc.)
+** Correctly numerize ordinals

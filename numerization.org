@@ -1,0 +1,23 @@
+#+STARTUP: showall
+
+* direct numbers
+
+* ten prefixes
+
+* big prefixes
+** hundred
+** thousand
+** million
+** billion
+** trillion
+
+* Algorithm
+1. sum<-0, multiplier<-1, tsum<-0. Start from right.
+2. No tokens left? sum<-sum+(tsum * multiplier). Exit and return sum.
+3. Is it a direct or a ten prefix? Then go to 4.
+4. We are at a hundreds prefix. sum<-sum+(tsum * multiplier), tsum<-0, multiplier<-prefix value. Go left. Go to 2.
+5. We are at a tens or a direct prefix. tsum<-tsum+prefix value. Go left. Go to 2.
+
+
+
+

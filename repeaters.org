@@ -1,0 +1,18 @@
+#+STARTUP: showall
+
++ [X] repeater_day_name.rb
++ [X] repeater_day_portion.rb
++ [X] repeater_day.rb
++ [X] repeater_fortnight.rb
++ [X] repeater_hour.rb
++ [X] repeater_minute.rb
++ [X] repeater_month_name.rb
++ [X] repeater_month.rb
++ [ ] repeater_season_name.rb
++ [ ] repeater_season.rb
++ [X] repeater_second.rb
++ [X] repeater_time.rb
++ [ ] repeater_weekday.rb
++ [X] repeater_weekend.rb
++ [X] repeater_week.rb
++ [X] repeater_year.rb
