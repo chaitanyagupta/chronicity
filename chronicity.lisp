@@ -44,7 +44,7 @@
 
 (defmethod print-object ((x token) stream)
   (print-unreadable-object (x stream :type t :identity t)
-    (format stream "~A~@[ {TAGS: ~{~A~^, ~}}~]"
+    (format stream "~A~@[ [~{~A~^, ~}]~]"
             (token-word x)
             (mapcar #'type-of (token-tags x)))))
 
