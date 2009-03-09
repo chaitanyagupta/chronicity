@@ -1,4 +1,8 @@
-(cl:in-package #:cl-chronic)
+(cl:in-package #:chronicity)
+
+;;; Enable cl-interpol reader
+
+(cl-interpol:enable-interpol-syntax)
 
 ;;; TODO: Class definitions for each kind of repeater, also return
 ;;; these class instances instead of a keyword
@@ -6,7 +10,7 @@
 (defclass repeater (tag)
   ())
 
-(defmethod scan ((repeater repeater) tokens)
+(defmethod scan-tokens ((tag (eql 'repeater)) tokens)
   (dolist (token tokens)
     (awhen (scan-for-month-names token) (tag it token))
     (awhen (scan-for-day-names token) (tag it token))
@@ -62,5 +66,9 @@
        for (regex keyword) in scan-map
        when (cl-ppcre:scan regex word)
        return keyword)))
+
+;;; Disable cl-interpol reader
+
+(cl-interpol:disable-interpol-syntax)
 
 

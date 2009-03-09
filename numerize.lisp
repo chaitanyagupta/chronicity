@@ -1,4 +1,4 @@
-(cl:in-package #:cl-chronic)
+(cl:in-package #:chronicity)
 
 (cl-interpol:enable-interpol-syntax)
 

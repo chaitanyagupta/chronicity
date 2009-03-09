@@ -1,10 +1,10 @@
 (cl:in-package #:cl-user)
 
-(defpackage #:cl-chronic-test
+(defpackage #:chronicity-test
   (:use #:cl #:rt)
-  (:import-from #:cl-chronic #:numerize))
+  (:import-from #:chronicity #:numerize))
 
-(in-package #:cl-chronic-test)
+(in-package #:chronicity-test)
 
 ;;; Numerizer tests
 
@@ -24,3 +24,8 @@
 (def-numerizer-test num-b3 "four hundred and fourty four" "444")
 (def-numerizer-test num-m1 "seven hours before now" "7 hours before now")
 (def-numerizer-test num-m2 "three hundred and sixty two days from now" "362 days from now")
+
+;;; The run tests interface
+
+(defun run-all-tests ()
+  (rt:do-tests))

@@ -1,9 +1,13 @@
-(cl:in-package #:cl-chronic)
+(cl:in-package #:chronicity)
+
+;;; Enable cl-interpol reader
+
+(cl-interpol:enable-interpol-syntax)
 
 (defclass ordinal (tag)
   ())
 
-(defmethod scan ((tag (eql 'ordinal)) tokens)
+(defmethod scan-tokens ((tag (eql 'ordinal)) tokens)
   (dolist (token tokens tokens)
     (awhen (scan-for-ordinals token) (tag it token))
     (awhen (scan-for-ordinal-days token) (tag it token))))
@@ -19,4 +23,8 @@
   (when (and (cl-ppcre:scan #?r"^(\d*)(st|nd|rd|th)$" (token-word token))
              (<= (parse-integer (token-word token)) 31))
     (create-tag 'ordinal-day (parse-integer (token-word token)))))
+
+;;; Disable cl-interpol reader
+
+(cl-interpol:disable-interpol-syntax)
 

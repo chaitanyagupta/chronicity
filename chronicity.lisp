@@ -1,14 +1,6 @@
-(cl:in-package #:cl-user)
-
-(defpackage #:cl-chronic
-  (:use #:cl))
-
-(in-package #:cl-chronic)
+(cl:in-package #:chronicity)
 
 (cl-interpol:enable-interpol-syntax)
-
-(defmacro rr-all-f (place regex replacement &rest args)
-  `(setf ,place (cl-ppcre:regex-replace-all ,regex ,place ,replacement ,@args)))
 
 (defun parse (string &key context now guess ambiguous-time-range)
   "The API."
@@ -81,6 +73,11 @@
 
 (defmethod untag ((x symbol) token)
   (untag (find-class x) token))
+
+;;; Generic token scanner
+
+(defgeneric scan-tokens (tag tokens)
+  (:documentation "Scan the list of TOKENS and tag the appropriately."))
 
 ;;; Data
 

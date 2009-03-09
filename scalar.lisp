@@ -1,9 +1,13 @@
-(cl:in-package #:cl-chronic)
+(cl:in-package #:chronicity)
+
+;;; Enable cl-interpol reader
+
+(cl-interpol:enable-interpol-syntax)
 
 (defclass scalar (tag)
   ())
 
-(defmethod scan ((tag (eql 'scalar)) tokens)
+(defmethod scan-tokens ((tag (eql 'scalar)) tokens)
   (loop
      for (token post-token) on tokens
      do
@@ -52,3 +56,7 @@
   (when (and (cl-ppcre:scan #?r"^([1-9]\d)?\d\d?$" (token-word token))
              (check-post-token post-token))
     (create-tag 'scalar-year (parse-integer (token-word token)))))
+
+;;; Disable cl-interpol reader
+
+(cl-interpol:disable-interpol-syntax)
