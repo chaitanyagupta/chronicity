@@ -14,15 +14,17 @@
 
 (defun scan-for-ordinals (token)
   (when (cl-ppcre:scan #?r"^(\d*)(st|nd|rd|th)$" (token-word token))
-    (create-tag 'ordinal (parse-integer (token-word token)))))
+    (create-tag 'ordinal (parse-integer (token-word token)
+                                        :junk-allowed t))))
 
 (defclass ordinal-day (tag)
   ())
 
 (defun scan-for-ordinal-days (token)
-  (when (and (cl-ppcre:scan #?r"^(\d*)(st|nd|rd|th)$" (token-word token))
-             (<= (parse-integer (token-word token)) 31))
-    (create-tag 'ordinal-day (parse-integer (token-word token)))))
+  (when (cl-ppcre:scan #?r"^(\d*)(st|nd|rd|th)$" (token-word token))
+    (let ((num (parse-integer (token-word token) :junk-allowed t)))
+      (when (<= num 31)
+        (create-tag 'ordinal-day num)))))
 
 ;;; Disable cl-interpol reader
 
