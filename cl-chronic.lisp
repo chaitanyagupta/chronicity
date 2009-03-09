@@ -18,7 +18,7 @@
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))
-  ;; (setf text (numericize-numbers text))
+  (setf text (numerize text))
   (rr-all-f text #?/['\"\.]/ "")
   (rr-all-f text #?/([\/\-\,\@])/ " \\1 ")
   (rr-all-f text #?/\btoday\b/ "this day")
@@ -36,6 +36,78 @@
   (rr-all-f text #?/\btonight\b/ "this night")
   (rr-all-f text "(?=\\w)([ap]m|oclock)\\b" "\\1")
   (rr-all-f text "\\b(hence|after|from)\\b" "future")
-  ;; (setf text (numericize-ordinals text))
+  ;; TODO: (setf text (numericize-ordinals text)) 
   text)
+
+(defun tokenize (text)
+  (mapcar #'create-token
+          (cl-ppcre:split #?r"\s+" text)))
+
+(defclass token ()
+  ((word :initarg :word
+         :reader token-word)
+   (tags :initarg :tags
+         :initform nil
+         :accessor token-tags)))
+
+(defmethod print-object ((x token) stream)
+  (print-unreadable-object (x stream :type t :identity t)
+    (format stream "~A~@[ {TAGS: ~{~A~^, ~}}~]"
+            (token-word x)
+            (mapcar #'type-of (token-tags x)))))
+
+(defun create-token (word &rest tags)
+  (make-instance 'token
+                 :word word
+                 :tags tags))
+
+(defclass tag ()
+  ((type :initarg :type
+         :reader tag-type)))
+
+(defun create-tag (class type)
+  (make-instance class :type type))
+
+(defmethod tag (tag token)
+  (push tag (token-tags token)))
+
+(defmethod untag ((tag tag) (token token))
+  (setf (token-tags token) (remove tag (token-tags token))))
+
+(defmethod untag ((x class) (token token))
+  (setf (token-tags token) (remove-if #'(lambda (tag)
+                                          (typep tag x))
+                                      (token-tags token))))
+
+(defmethod untag ((x symbol) token)
+  (untag (find-class x) token))
+
+;;; Data
+
+(defparameter *months*
+  (list :JANUARY
+        :FEBRUARY
+        :MARCH
+        :APRIL
+        :MAY
+        :JUNE
+        :JULY
+        :AUGUST
+        :SEPTEMBER
+        :OCTOBER
+        :NOVEMBER
+        :DECEMBER))
+
+(defparameter *days-of-week*
+  (list :MONDAY
+        :TUESDAY
+        :WEDNESDAY
+        :THURSDAY
+        :FRIDAY
+        :SATURDAY
+        :SUNDAY))
+
+
+
+
 

@@ -12,19 +12,19 @@
     ("seventeen" 17)
     ("eighteen" 18)
     ("nineteen" 19)
-    ("ninteen" 19)                    ; Common mis-spelling
+    ("ninteen" 19)                      ; Common mis-spelling
     ("zero" 0)
     ("one" 1)
     ("two" 2)
     ("three" 3)
-    (#?r"\bfour\b" 4) ; So that it matches four but not fourty
+    (#?r"\bfour\b" 4)         ; So that it matches four but not fourty
     ("five" 5)
     (#?r"\bsix\b" 6)
     (#?r"\bseven\b" 7)
     (#?r"\beight\b" 8)
     (#?r"\bnine\b" 9)
     ("ten" 10)
-    (#?r"\ba[\b^$]" 9) ; doesn't make sense for an 'a' at the end to be a 1
+    (#?r"\ba[\b^$]" 1) ; doesn't make sense for an 'a' at the end to be a 1
     ))
 
 (defvar *ten-prefixes*
