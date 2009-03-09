@@ -2,6 +2,7 @@
 
 (defpackage #:chronicity-test
   (:use #:cl #:rt)
+  (:export #:run-all-tests)
   (:import-from #:chronicity #:numerize))
 
 (in-package #:chronicity-test)
@@ -11,6 +12,7 @@
 (defmacro def-numerizer-test (name string result)
   `(deftest ,name (numerize ,string) ,result))
 
+(def-numerizer-test num-m0 "" "")
 (def-numerizer-test num-d1 "one" "1")
 (def-numerizer-test num-d2 "two foo" "2 foo")
 (def-numerizer-test num-d3 "a four" "a 4")
