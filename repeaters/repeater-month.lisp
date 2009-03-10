@@ -1,7 +1,5 @@
 (cl:in-package #:chronicity)
 
-(defconstant +year-months+ 12)
-
 (defclass repeater-month (repeater)
   ((current :initform nil)))
 

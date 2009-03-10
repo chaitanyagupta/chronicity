@@ -1,6 +1,13 @@
 (cl:in-package #:chronicity)
 
-(cl-interpol:enable-interpol-syntax)
+;;; Some constants
+
+(defconstant +month-seconds+ (* 30 24 60 60))
+(defconstant +year-months+ 12)
+
+;;; Enable CL-INTERPOL's special reader syntax
+
+#.(cl-interpol:enable-interpol-syntax)
 
 (defun parse (string &key context now guess ambiguous-time-range)
   "The API."
@@ -112,6 +119,10 @@
         :FRIDAY
         :SATURDAY
         :SUNDAY))
+
+;;; Disable CL-INTERPOL's special reader syntax
+
+#.(cl-interpol:disable-interpol-syntax)
 
 
 

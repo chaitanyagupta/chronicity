@@ -2,7 +2,7 @@
 
 ;;; Enable cl-interpol reader
 
-(cl-interpol:enable-interpol-syntax)
+#.(cl-interpol:enable-interpol-syntax)
 
 ;;; TODO: scan should get an EQL symbol
 (defclass pointer (tag)
@@ -23,4 +23,4 @@
 
 ;;; Disable cl-interpol reader
 
-(cl-interpol:disable-interpol-syntax)
+#.(cl-interpol:disable-interpol-syntax)

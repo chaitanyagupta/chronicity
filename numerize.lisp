@@ -1,6 +1,6 @@
 (cl:in-package #:chronicity)
 
-(cl-interpol:enable-interpol-syntax)
+#.(cl-interpol:enable-interpol-syntax)
 
 (defvar *direct-nums*
   '(("eleven" 11)
@@ -92,28 +92,9 @@
                   summing num))))
    :simple-calls t))
 
-#|(defun numerize (string)
-  (rr-all-f string #?r" +|([^\d])-([^d])" "\\1 \\2")
-  (rr-all-f string #?r"a half" "haAlf")
+;;; Disable cl-interpol reader
 
-  ;; Replacing direct nums
-  (dolist (num *direct-nums*)
-    (rr-all-f string #?r"${(first num)}" (second num)))
-
-  (dolist (tp *ten-prefixes*)
-    (rr-all-f string
-              #?r"(?:${(first tp)})( *\d(?=[^\d]|$))*"
-              (lambda (match &rest registers)
-                (format nil "~A"
-                        (+ (second tp)
-                           (parse-integer (or (first registers) "0")))))
-              :simple-calls t))
-
-  
-
-  
-  
-  )|#
+#.(cl-interpol:disable-interpol-syntax)
 
 
 

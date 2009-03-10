@@ -2,7 +2,7 @@
 
 ;;; Enable cl-interpol reader
 
-(cl-interpol:enable-interpol-syntax)
+#.(cl-interpol:enable-interpol-syntax)
 
 ;;; TODO: Class definitions for each kind of repeater, also return
 ;;; these class instances instead of a keyword
@@ -76,6 +76,6 @@
 
 ;;; Disable cl-interpol reader
 
-(cl-interpol:disable-interpol-syntax)
+#.(cl-interpol:disable-interpol-syntax)
 
 

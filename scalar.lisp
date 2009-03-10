@@ -2,7 +2,7 @@
 
 ;;; Enable cl-interpol reader
 
-(cl-interpol:enable-interpol-syntax)
+#.(cl-interpol:enable-interpol-syntax)
 
 (defclass scalar (tag)
   ())
@@ -59,4 +59,4 @@
 
 ;;; Disable cl-interpol reader
 
-(cl-interpol:disable-interpol-syntax)
+#.(cl-interpol:disable-interpol-syntax)
