@@ -8,8 +8,7 @@
 (defsystem #:chronicity
   :depends-on (:cl-ppcre :cl-interpol)
   :serial t
-  :components ((:file "date-calc")
-               (:file "packages")
+  :components ((:file "packages")
                (:file "utils")
                (:file "numerize")
                (:file "chronicity")
