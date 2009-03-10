@@ -55,7 +55,10 @@
 
 (defclass tag ()
   ((type :initarg :type
-         :reader tag-type)))
+         :reader tag-type)
+   (now :initarg :now
+        :accessor tag-now
+        :initform nil)))
 
 (defun create-tag (class type)
   (make-instance class :type type))
@@ -94,6 +97,12 @@
         :OCTOBER
         :NOVEMBER
         :DECEMBER))
+
+(defun month-name (index)
+  (elt *months* (1- index)))
+
+(defun month-index (name)
+  (1+ (position name *months*)))
 
 (defparameter *days-of-week*
   (list :MONDAY

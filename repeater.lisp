@@ -11,13 +11,12 @@
   ())
 
 (defmethod scan-tokens ((tag (eql 'repeater)) tokens)
-  (dolist (token tokens)
+  (dolist (token tokens tokens)
     (awhen (scan-for-month-names token) (tag it token))
     (awhen (scan-for-day-names token) (tag it token))
     (awhen (scan-for-day-portions token) (tag it token))
     (awhen (scan-for-times token) (tag it token))
-    (awhen (scan-for-units token) (tag it token)))
-  tokens)
+    (awhen (scan-for-units token) (tag it token))))
 
 (defun scan-for-month-names (token &aux (word (token-word token)))
   (loop
@@ -66,6 +65,14 @@
        for (regex keyword) in scan-map
        when (cl-ppcre:scan regex word)
        return keyword)))
+
+;;; This will be used by the R-NEXT and R-THIS method of REPEATER's
+;;; subclasses
+
+(defun check-pointer (pointer)
+  (let ((list (list :future :none :past)))
+    (unless (member pointer list)
+      (error "POINTER must be one of ~{~S~^, ~}" list))))
 
 ;;; Disable cl-interpol reader
 
