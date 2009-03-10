@@ -31,7 +31,7 @@
      for day in *days-of-week*
      when (cl-ppcre:scan (cl-ppcre:create-scanner word :case-insensitive-mode t)
                          (string day))
-     return day))
+     return (create-tag 'repeater-day-name day)))
 
 (defun scan-for-day-portions (token &aux (word (token-word token)))
   (let ((scan-map '(("^ams?$" :am)
@@ -43,7 +43,7 @@
     (loop
        for (regex keyword) in scan-map
        when (cl-ppcre:scan regex word)
-       return keyword)))
+       return (create-tag 'repeater-day-portion keyword))))
 
 ;;; TODO: repeater.rb has options here, what does it do?
 (defun scan-for-times (token &aux (word (token-word token)))
@@ -73,6 +73,14 @@
   (let ((list (list :future :none :past)))
     (unless (member pointer list)
       (error "POINTER must be one of ~{~S~^, ~}" list))))
+
+(defmethod r-next :around ((repeater repeater) pointer)
+  (check-pointer pointer)
+  (call-next-method))
+
+(defmethod r-this :around ((repeater repeater) pointer)
+  (check-pointer pointer)
+  (call-next-method))
 
 ;;; Disable cl-interpol reader
 

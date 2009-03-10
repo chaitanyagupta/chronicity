@@ -4,7 +4,6 @@
   ((current :initform nil)))
 
 (defmethod r-next ((repeater repeater-month-name) pointer)
-  (check-pointer pointer)
   (with-slots (current now)
       repeater
     (if (not current)
@@ -26,7 +25,6 @@
     (make-span current (date-time+ current 1 :month))))
 
 (defmethod r-this ((repeater repeater-month-name) pointer)
-  (check-pointer pointer)
   (ecase pointer
     (:past (r-next repeater :past))
     ((:future :none) (r-next repeater :none))))

@@ -2,6 +2,7 @@
 
 ;;; Some constants
 
+(defconstant +day-seconds+ (* 24 60 60))
 (defconstant +month-seconds+ (* 30 24 60 60))
 (defconstant +year-months+ 12)
 
@@ -112,13 +113,19 @@
   (1+ (position name *months*)))
 
 (defparameter *days-of-week*
-  (list :MONDAY
+  (list :SUNDAY
+        :MONDAY
         :TUESDAY
         :WEDNESDAY
         :THURSDAY
         :FRIDAY
-        :SATURDAY
-        :SUNDAY))
+        :SATURDAY))
+
+(defun dow-index (name)
+  (position name *days-of-week*))
+
+(defun dow-name (index)
+  (elt *days-of-week* index))
 
 ;;; Disable CL-INTERPOL's special reader syntax
 

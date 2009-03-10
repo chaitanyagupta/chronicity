@@ -49,6 +49,10 @@
                        (sec (sec-of from)))
   (make-date-time year month day hour minute sec))
 
+(defun merge-date-time (date time)
+  (make-date-time (year-of date) (month-of date) (day-of date)
+                  (hour-of time) (minute-of time) (sec-of time)))
+
 (defun now ()
   (local-time:now))
 
@@ -74,6 +78,15 @@
 
 (defun sec-of (date-time)
   (local-time:timestamp-second date-time))
+
+(defun dow-of (date-time)
+  (local-time:timestamp-day-of-week date-time))
+
+(defun day-sec-of (date-time)
+  "Returns the second of the day."
+  (+ (* (hour-of date-time) 3600)
+     (* (minute-of date-time) 60)
+     (sec-of date-time)))
 
 ;;; Date time Calculations
 
@@ -106,11 +119,35 @@
 (defun date-time-adjust (date-time value part)
   (local-time:adjust-timestamp date-time (set part value)))
 
-(defun date-time-maximize-part (date-time part)
-  (local-time:timestamp-maximize-part date-time part))
+(defun start-of-year (date-time)
+  (local-time:timestamp-minimize-part date-time :month))
 
-(defun date-time-minimize-part (date-time part)
-  (local-time:timestamp-minimize-part date-time part))
+(defun end-of-year (date-time)
+  (local-time:timestamp-maximize-part date-time :month))
+
+(defun start-of-month (date-time)
+  (local-time:timestamp-minimize-part date-time :day))
+
+(defun end-of-month (date-time)
+  (local-time:timestamp-maximize-part date-time :day))
+
+(defun start-of-day (date-time)
+  (local-time:timestamp-minimize-part date-time :hour))
+
+(defun end-of-day (date-time)
+  (local-time:timestamp-maximize-part date-time :hour))
+
+(defun start-of-hour (date-time)
+  (local-time:timestamp-minimize-part date-time :min))
+
+(defun end-of-hour (date-time)
+  (local-time:timestamp-maximize-part date-time :min))
+
+(defun start-of-minute (date-time)
+  (local-time:timestamp-minimize-part date-time :sec))
+
+(defun end-of-minute (date-time)
+  (local-time:timestamp-maximize-part date-time :sec))
 
 ;;; Time span
 
@@ -136,6 +173,14 @@
 
 (defun make-span (start end &optional (end-included-p t))
   (make-instance 'span :start start :end end :end-included-p end-included-p))
+
+(defun span+ (span amount unit)
+  (make-span (date-time+ (span-start span) amount unit)
+             (date-time+ (span-end span) amount unit)))
+
+(defun span- (span amount unit)
+  (make-span (date-time- (span-start span) amount unit)
+             (date-time- (span-end span) amount unit)))
 
 
 
