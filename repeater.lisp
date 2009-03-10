@@ -23,7 +23,7 @@
      for month in *months*
      when (cl-ppcre:scan (cl-ppcre:create-scanner word :case-insensitive-mode t)
                          (string month))
-     return month))
+     return (create-tag 'repeater-month-name month)))
 
 ;;; TODO: Check for spelling mistakes
 (defun scan-for-day-names (token &aux (word (token-word token)))
