@@ -105,6 +105,7 @@
 (defun date-time+ (date-time amount unit)
   (case unit
     (:month (date-time-month+ date-time amount))
+    (:week (date-time+ date-time (* 7 amount) :day))
     (t (local-time:timestamp+ date-time amount unit))))
 
 (defun date-time- (date-time amount unit)
@@ -117,7 +118,31 @@
   (date-time- date-time 1 unit))
 
 (defun date-time-adjust (date-time value part)
-  (local-time:adjust-timestamp date-time (set part value)))
+  (case part
+    (:day-of-week (local-time:adjust-timestamp date-time (offset part value)))
+    (t (local-time:adjust-timestamp date-time (set part value)))))
+
+;;; Date time comparisons
+
+(defun date-time< (&rest args)
+  (apply #'local-time:timestamp< args))
+
+(defun date-time<= (&rest args)
+  (apply #'local-time:timestamp<= args))
+
+(defun date-time> (&rest args)
+  (apply #'local-time:timestamp> args))
+
+(defun date-time>= (&rest args)
+  (apply #'local-time:timestamp>= args))
+
+(defun date-time= (&rest args)
+  (apply #'local-time:timestamp= args))
+
+(defun date-time/= (&rest args)
+  (apply #'local-time:timestamp/= args))
+
+;;; Miscellaneous query operations on date-time objects
 
 (defun start-of-year (date-time)
   (local-time:timestamp-minimize-part date-time :month))
@@ -148,6 +173,12 @@
 
 (defun end-of-minute (date-time)
   (local-time:timestamp-maximize-part date-time :sec))
+
+(defun start-of-week (date-time)
+  (start-of-day (date-time-adjust date-time :sunday :day-of-week)))
+
+(defun end-of-week (date-time)
+  (end-of-day (date-time-adjust date-time :saturday :day-of-week)))
 
 ;;; Time span
 

@@ -3,7 +3,10 @@
 ;;; Some constants
 
 (defconstant +day-seconds+ (* 24 60 60))
+(defconstant +weekend-seconds+ (* 2 24 60 60))
+(defconstant +week-seconds+ (* 7 24 60 60))
 (defconstant +month-seconds+ (* 30 24 60 60))
+(defconstant +year-seconds+ (* 365 24 60 60))
 (defconstant +year-months+ 12)
 
 ;;; Enable CL-INTERPOL's special reader syntax
