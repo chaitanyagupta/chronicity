@@ -9,21 +9,21 @@
     (if (not current-week-start)
         (setf current-week-start
               (case pointer
-                (:future (date-time-1+ (start-of-week now) :week))
-                (:past (date-time-1- (start-of-week now) :week))))
+                (:future (datetime-1+ (start-of-week now) :week))
+                (:past (datetime-1- (start-of-week now) :week))))
         (if (eql pointer :future)
-            (setf current-week-start (date-time-1+ current-week-start :week))
-            (setf current-week-start (date-time-1- current-week-start :week))))
-    (make-span current-week-start (date-time+ current-week-start 7 :day))))
+            (setf current-week-start (datetime-1+ current-week-start :week))
+            (setf current-week-start (datetime-1- current-week-start :week))))
+    (make-span current-week-start (datetime+ current-week-start 7 :day))))
 
 (defmethod r-this ((repeater repeater-week) pointer)
   (with-slots (now)
       repeater
     (ecase pointer
-      (:future (make-span (date-time-1+ (start-of-hour now) :hour)
-                          (date-time-1+ (start-of-week now) :week)))
+      (:future (make-span (datetime-1+ (start-of-hour now) :hour)
+                          (datetime-1+ (start-of-week now) :week)))
       (:past (make-span (start-of-week now) (start-of-hour now)))
-      (:none (make-span (start-of-week now) (date-time-1+ (start-of-week now) :week))))))
+      (:none (make-span (start-of-week now) (datetime-1+ (start-of-week now) :week))))))
 
 ;;; TODO: R-OFFSET?
 

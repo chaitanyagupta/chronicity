@@ -11,7 +11,7 @@
     (offset :minute minute)
     (offset :sec sec)))
 
-(defun make-date-time (year &optional (month 1) (day 1) (hour 0) (minute 0) (sec 0))
+(defun make-datetime (year &optional (month 1) (day 1) (hour 0) (minute 0) (sec 0))
   (local-time:encode-timestamp 0 sec minute hour day month year))
 
 (defun copy-date (from &key
@@ -26,17 +26,17 @@
                   (sec (sec-of from)))
   (make-time hour minute sec))
 
-(defun copy-date-time (from &key
+(defun copy-datetime (from &key
                        (year (year-of from))
                        (month (month-of from))
                        (day (day-of from))
                        (hour (hour-of from))
                        (minute (minute-of from))
                        (sec (sec-of from)))
-  (make-date-time year month day hour minute sec))
+  (make-datetime year month day hour minute sec))
 
-(defun merge-date-time (date time)
-  (make-date-time (year-of date) (month-of date) (day-of date)
+(defun merge-datetime (date time)
+  (make-datetime (year-of date) (month-of date) (day-of date)
                   (hour-of time) (minute-of time) (sec-of time)))
 
 (defun now ()
@@ -47,124 +47,124 @@
 
 ;;; Date time Readers
 
-(defun year-of (date-time)
-  (local-time:timestamp-year date-time))
+(defun year-of (datetime)
+  (local-time:timestamp-year datetime))
 
-(defun month-of (date-time)
-  (local-time:timestamp-month date-time))
+(defun month-of (datetime)
+  (local-time:timestamp-month datetime))
 
-(defun day-of (date-time)
-  (local-time:timestamp-day date-time))
+(defun day-of (datetime)
+  (local-time:timestamp-day datetime))
 
-(defun hour-of (date-time)
-  (local-time:timestamp-hour date-time))
+(defun hour-of (datetime)
+  (local-time:timestamp-hour datetime))
 
-(defun minute-of (date-time)
-  (local-time:timestamp-minute date-time))
+(defun minute-of (datetime)
+  (local-time:timestamp-minute datetime))
 
-(defun sec-of (date-time)
-  (local-time:timestamp-second date-time))
+(defun sec-of (datetime)
+  (local-time:timestamp-second datetime))
 
-(defun dow-of (date-time)
-  (local-time:timestamp-day-of-week date-time))
+(defun dow-of (datetime)
+  (local-time:timestamp-day-of-week datetime))
 
-(defun day-sec-of (date-time)
+(defun day-sec-of (datetime)
   "Returns the second of the day."
-  (+ (* (hour-of date-time) 3600)
-     (* (minute-of date-time) 60)
-     (sec-of date-time)))
+  (+ (* (hour-of datetime) 3600)
+     (* (minute-of datetime) 60)
+     (sec-of datetime)))
 
 ;;; Date time Calculations
 
 ;;;; Looks like LOCAL-TIME's month addition/subtraction is broken :(
 ;;;; Direct translation of Chronic's Chronic::RepeaterMonth.offset_by
-(defun date-time-month+ (date-time amount)
+(defun datetime-month+ (datetime amount)
   (let* ((amount-years (floor amount 12))
          (amount-months (mod amount 12))
-         (new-year (+ (year-of date-time) amount-years))
-         (new-month (+ (month-of date-time) amount-months)))
+         (new-year (+ (year-of datetime) amount-years))
+         (new-month (+ (month-of datetime) amount-months)))
     (when (> new-month 12)
       (incf new-year)
       (decf new-month 12))
-    (copy-date-time date-time :year new-year :month new-month)))
+    (copy-datetime datetime :year new-year :month new-month)))
 
-(defun date-time+ (date-time amount unit)
+(defun datetime+ (datetime amount unit)
   (case unit
-    (:month (date-time-month+ date-time amount))
-    (:week (date-time+ date-time (* 7 amount) :day))
-    (t (local-time:timestamp+ date-time amount unit))))
+    (:month (datetime-month+ datetime amount))
+    (:week (datetime+ datetime (* 7 amount) :day))
+    (t (local-time:timestamp+ datetime amount unit))))
 
-(defun date-time- (date-time amount unit)
-  (date-time+ date-time (- amount) unit))
+(defun datetime- (datetime amount unit)
+  (datetime+ datetime (- amount) unit))
 
-(defun date-time-1+ (date-time unit)
-  (date-time+ date-time 1 unit))
+(defun datetime-1+ (datetime unit)
+  (datetime+ datetime 1 unit))
 
-(defun date-time-1- (date-time unit)
-  (date-time- date-time 1 unit))
+(defun datetime-1- (datetime unit)
+  (datetime- datetime 1 unit))
 
-(defun date-time-adjust (date-time value part)
+(defun datetime-adjust (datetime value part)
   (case part
-    (:day-of-week (local-time:adjust-timestamp date-time (offset part value)))
-    (t (local-time:adjust-timestamp date-time (set part value)))))
+    (:day-of-week (local-time:adjust-timestamp datetime (offset part value)))
+    (t (local-time:adjust-timestamp datetime (set part value)))))
 
 ;;; Date time comparisons
 
-(defun date-time< (&rest args)
+(defun datetime< (&rest args)
   (apply #'local-time:timestamp< args))
 
-(defun date-time<= (&rest args)
+(defun datetime<= (&rest args)
   (apply #'local-time:timestamp<= args))
 
-(defun date-time> (&rest args)
+(defun datetime> (&rest args)
   (apply #'local-time:timestamp> args))
 
-(defun date-time>= (&rest args)
+(defun datetime>= (&rest args)
   (apply #'local-time:timestamp>= args))
 
-(defun date-time= (&rest args)
+(defun datetime= (&rest args)
   (apply #'local-time:timestamp= args))
 
-(defun date-time/= (&rest args)
+(defun datetime/= (&rest args)
   (apply #'local-time:timestamp/= args))
 
-;;; Miscellaneous query operations on date-time objects
+;;; Miscellaneous query operations on datetime objects
 
-(defun start-of-year (date-time)
-  (local-time:timestamp-minimize-part date-time :month))
+(defun start-of-year (datetime)
+  (local-time:timestamp-minimize-part datetime :month))
 
-(defun end-of-year (date-time)
-  (local-time:timestamp-maximize-part date-time :month))
+(defun end-of-year (datetime)
+  (local-time:timestamp-maximize-part datetime :month))
 
-(defun start-of-month (date-time)
-  (local-time:timestamp-minimize-part date-time :day))
+(defun start-of-month (datetime)
+  (local-time:timestamp-minimize-part datetime :day))
 
-(defun end-of-month (date-time)
-  (local-time:timestamp-maximize-part date-time :day))
+(defun end-of-month (datetime)
+  (local-time:timestamp-maximize-part datetime :day))
 
-(defun start-of-day (date-time)
-  (local-time:timestamp-minimize-part date-time :hour))
+(defun start-of-day (datetime)
+  (local-time:timestamp-minimize-part datetime :hour))
 
-(defun end-of-day (date-time)
-  (local-time:timestamp-maximize-part date-time :hour))
+(defun end-of-day (datetime)
+  (local-time:timestamp-maximize-part datetime :hour))
 
-(defun start-of-hour (date-time)
-  (local-time:timestamp-minimize-part date-time :min))
+(defun start-of-hour (datetime)
+  (local-time:timestamp-minimize-part datetime :min))
 
-(defun end-of-hour (date-time)
-  (local-time:timestamp-maximize-part date-time :min))
+(defun end-of-hour (datetime)
+  (local-time:timestamp-maximize-part datetime :min))
 
-(defun start-of-minute (date-time)
-  (local-time:timestamp-minimize-part date-time :sec))
+(defun start-of-minute (datetime)
+  (local-time:timestamp-minimize-part datetime :sec))
 
-(defun end-of-minute (date-time)
-  (local-time:timestamp-maximize-part date-time :sec))
+(defun end-of-minute (datetime)
+  (local-time:timestamp-maximize-part datetime :sec))
 
-(defun start-of-week (date-time)
-  (start-of-day (date-time-adjust date-time :sunday :day-of-week)))
+(defun start-of-week (datetime)
+  (start-of-day (datetime-adjust datetime :sunday :day-of-week)))
 
-(defun end-of-week (date-time)
-  (end-of-day (date-time-adjust date-time :saturday :day-of-week)))
+(defun end-of-week (datetime)
+  (end-of-day (datetime-adjust datetime :saturday :day-of-week)))
 
 ;;; Time span
 
@@ -192,12 +192,12 @@
   (make-instance 'span :start start :end end :end-included-p end-included-p))
 
 (defun span+ (span amount unit)
-  (make-span (date-time+ (span-start span) amount unit)
-             (date-time+ (span-end span) amount unit)))
+  (make-span (datetime+ (span-start span) amount unit)
+             (datetime+ (span-end span) amount unit)))
 
 (defun span- (span amount unit)
-  (make-span (date-time- (span-start span) amount unit)
-             (date-time- (span-end span) amount unit)))
+  (make-span (datetime- (span-start span) amount unit)
+             (datetime- (span-end span) amount unit)))
 
 
 

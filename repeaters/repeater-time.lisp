@@ -1,5 +1,7 @@
 (cl:in-package #:chronicity)
 
+#.(cl-interpol:enable-interpol-syntax)
+
 (defclass repeater-time (repeater)
   ((current :initform nil)))
 
@@ -66,32 +68,32 @@
       (unless current
         (setf first-time-p t)
         (let* ((midnight (copy-date now))
-               (yesterday-midnight (date-time-1- midnight :day))
-               (tomorrow-midnight (date-time-1+ midnight :day))
-               (midnight+tick (merge-date-time midnight tick-time))
-               (midday+tick (date-time+ midnight+tick halfday-hours :hour))
-               (tomorrow+tick (merge-date-time tomorrow-midnight tick-time))
-               (yesterday+tick (merge-date-time yesterday-midnight tick-time)))
+               (yesterday-midnight (datetime-1- midnight :day))
+               (tomorrow-midnight (datetime-1+ midnight :day))
+               (midnight+tick (merge-datetime midnight tick-time))
+               (midday+tick (datetime+ midnight+tick halfday-hours :hour))
+               (tomorrow+tick (merge-datetime tomorrow-midnight tick-time))
+               (yesterday+tick (merge-datetime yesterday-midnight tick-time)))
           (if (eql pointer :future)
               (if (tick-ambiguousp tick)
                   (loop
                      for time in (list midnight+tick midday+tick tomorrow+tick)
-                     thereis (and (date-time>= time now) (setf current time)))
+                     thereis (and (datetime>= time now) (setf current time)))
                   (loop
                      for time in (list midnight+tick tomorrow+tick)
-                     thereis (and (date-time>= time now) (setf current time))))
+                     thereis (and (datetime>= time now) (setf current time))))
               (if (tick-ambiguousp tick)
                   (loop
-                     for time in (list midday+tick midnight+tick (date-time+ yesterday+tick halfday-hours :hour))
-                     thereis (and (date-time<= time now) (setf current time)))
+                     for time in (list midday+tick midnight+tick (datetime+ yesterday+tick halfday-hours :hour))
+                     thereis (and (datetime<= time now) (setf current time)))
                   (loop
-                     for time in (list midnight+tick (date-time+ yesterday+tick halfday-hours :hour))
-                     thereis (and (date-time<= time now) (setf current time)))))))
+                     for time in (list midnight+tick (datetime+ yesterday+tick halfday-hours :hour))
+                     thereis (and (datetime<= time now) (setf current time)))))))
       (unless first-time-p
         (setf current (if (tick-ambiguousp tick)
-                          (date-time+ current (if (eql pointer :future) halfday-hours (- halfday-hours)) :hour)
-                          (date-time+ current (if (eql pointer :future) 1 -1) :day))))
-      (make-span current (date-time-1+ current :sec)))))
+                          (datetime+ current (if (eql pointer :future) halfday-hours (- halfday-hours)) :hour)
+                          (datetime+ current (if (eql pointer :future) 1 -1) :day))))
+      (make-span current (datetime-1+ current :sec)))))
 
 (defmethod r-this ((repeater repeater-time) pointer)
   (when (eql pointer :none)
@@ -101,4 +103,4 @@
 (defmethod r-width ((repeater repeater-time))
   1)
 
-
+#.(cl-interpol:disable-interpol-syntax)

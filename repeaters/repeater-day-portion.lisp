@@ -32,18 +32,18 @@
                (start (cond
                         ((< now-sec range-start-sec)
                          (case pointer
-                           (:future (merge-date-time now range-start))
-                           (:past (merge-date-time (date-time-1- now :day) range-start))))
+                           (:future (merge-datetime now range-start))
+                           (:past (merge-datetime (datetime-1- now :day) range-start))))
                         ((> now-sec range-start-sec)
                          (case pointer
-                           (:future (merge-date-time (date-time-1+ now :day) range-start))
-                           (:past (merge-date-time now range-start))))
+                           (:future (merge-datetime (datetime-1+ now :day) range-start))
+                           (:past (merge-datetime now range-start))))
                         (t
                          (case pointer
-                           (:future (merge-date-time (date-time-1+ now :day) range-start))
-                           (:past (merge-date-time (date-time-1- now :day) range-start)))))))
+                           (:future (merge-datetime (datetime-1+ now :day) range-start))
+                           (:past (merge-datetime (datetime-1- now :day) range-start)))))))
           (if start
-              (setf current (make-span start (merge-date-time start (span-end range))))
+              (setf current (make-span start (merge-datetime start (span-end range))))
               (error "Start should not be NIL.")))
         (case pointer
           (:future (setf current (span+ current 1 :day)))
@@ -52,8 +52,8 @@
 (defmethod r-this ((repeater repeater-day-portion) pointer)
   (with-slots (range current now)
       repeater
-    (let ((start (merge-date-time now (span-start range))))
-      (setf current (make-span start (merge-date-time start (span-end range)))))))
+    (let ((start (merge-datetime now (span-start range))))
+      (setf current (make-span start (merge-datetime start (span-end range)))))))
 
 ;;; TODO: R-OFFSET?
 
