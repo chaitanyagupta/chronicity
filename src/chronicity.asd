@@ -36,11 +36,6 @@
                (:file "ordinal")
                (:file "separator")))
 
-(asdf:defsystem #:chronicity-test
-  :depends-on (:chronicity :rt)
-  :serial t
-  :components ((:file "test")))
-
 (defmethod perform ((o test-op) (c (eql (find-system :chronicity))))
   (operate 'load-op :chronicity-test)
   (funcall (intern (symbol-name :run-all-tests) :chronicity-test)))
