@@ -25,11 +25,9 @@
                        (datetime-1+ (copy-date now :day 1) :month))))
       (make-span month-start month-end))))
 
-;;;; TODO: Do we need this?
-#|(defmethod r-offset ((repeater repeater-month) span amount pointer)
+(defmethod r-offset ((repeater repeater-month) span amount pointer)
   (let ((offset (* (if (eql pointer :future) 1 -1) amount)))
-    (make-span (datetime+ (span-start span) offset :month)
-               (datetime+ (span-end span) offset :month))))|#
+    (span+ span offset :month)))
 
 (defmethod r-width ((repeater repeater-month))
   +month-seconds+)

@@ -71,8 +71,8 @@
         :accessor tag-now
         :initform nil)))
 
-(defun create-tag (class type)
-  (make-instance class :type type))
+(defun create-tag (class type &key now)
+  (make-instance class :type type :now now))
 
 (defmethod tag (tag token)
   (push tag (token-tags token)))

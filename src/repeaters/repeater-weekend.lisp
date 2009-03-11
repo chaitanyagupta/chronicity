@@ -36,7 +36,15 @@
          (let ((saturday (span-start (r-next sat-repeater :past))))
            (make-span saturday (datetime+ saturday 2 :day))))))))
 
-;;; TODO: R-OFFSET?
+(defmethod r-offset ((repeater repeater-weekend) span amount pointer)
+  (let* ((direction (if (eql pointer :future) 1 -1))
+         (weekend-repeater (create-tag 'repeater-weekend
+                                       :weekend
+                                       :now (span-start span)))
+         (start (datetime+ (span-start (r-next weekend-repeater pointer))
+                           (* (1- amount) direction)
+                           :week)))
+    (make-span start (datetime+ start (span-width span) :sec))))
 
 (defmethod r-width ((repeater repeater-weekend))
   +weekend-seconds+)

@@ -128,6 +128,12 @@
 (defun datetime/= (&rest args)
   (apply #'local-time:timestamp/= args))
 
+(defun datetime-to-universal (datetime)
+  (local-time:timestamp-to-universal datetime))
+
+(defun universal-to-datetime (universal-time)
+  (local-time:universal-to-timestamp universal-time))
+
 ;;; Miscellaneous query operations on datetime objects
 
 (defun start-of-year (datetime)
@@ -190,6 +196,10 @@
 
 (defun make-span (start end &optional (end-included-p t))
   (make-instance 'span :start start :end end :end-included-p end-included-p))
+
+(defun span-width (span)
+  (- (datetime-to-universal (span-end span))
+     (datetime-to-universal (span-start span))))
 
 (defun span+ (span amount unit)
   (make-span (datetime+ (span-start span) amount unit)
