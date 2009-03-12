@@ -2,7 +2,7 @@
 
 (defpackage #:chronicity-test
   (:use #:cl #:lisp-unit)
-  (:export #:run-all-tests)
+  (:export #:run-suite)
   (:import-from #:chronicity
                 #:parse
                 #:numerize))
@@ -30,4 +30,10 @@
                    (search "DATETIME" name)
                    (search "SPAN" name)))
       (import s :chronicity-repeater-test))))
+
+(in-package #:chronicity-test)
+
+(defun run-suite ()
+  (run-all-tests :chronicity)
+  (run-all-tests :chronicity-test))
 
