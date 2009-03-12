@@ -98,7 +98,7 @@
 (defun datetime-decr (datetime unit &optional (amount 1))
   (datetime-incr datetime unit (- amount)))
 
-(defun datetime-adjust (datetime value part)
+(defun datetime-adjust (datetime part value)
   (case part
     (:day-of-week (local-time:adjust-timestamp datetime (offset part value)))
     (t (local-time:adjust-timestamp datetime (set part value)))))
@@ -168,10 +168,10 @@
   (local-time:timestamp-maximize-part datetime :sec))
 
 (defun start-of-week (datetime)
-  (start-of-day (datetime-adjust datetime :sunday :day-of-week)))
+  (start-of-day (datetime-adjust datetime :day-of-week :sunday)))
 
 (defun end-of-week (datetime)
-  (end-of-day (datetime-adjust datetime :saturday :day-of-week)))
+  (end-of-day (datetime-adjust datetime :day-of-week :saturday)))
 
 ;;; Time span
 
