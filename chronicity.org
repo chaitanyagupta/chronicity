@@ -1,3 +1,4 @@
+#+STARTUP: showall
 
 * Elements
 ** Repeater 
@@ -21,3 +22,4 @@ IST, GMT, etc.
 
 * TODOs
 ** Regex (foo|bar) in SLIME
+

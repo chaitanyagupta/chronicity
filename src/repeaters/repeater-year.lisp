@@ -26,9 +26,10 @@
                        (copy-date now)))
           (:none (list (start-of-year now)
                        (start-of-year (datetime-1+ now :year)))))
-      (make-span (make-date year-start) (make-date year-end)))))
+      (make-span year-start year-end))))
 
-;;; TODO: R-OFFSET?
+(defmethod r-offset ((repeater repeater-year) span amount pointer)
+  (span+ span (* amount (if (eql pointer :future) 1 -1)) :year))
 
 (defmethod r-width ((repeater repeater-year))
   +year-seconds+)

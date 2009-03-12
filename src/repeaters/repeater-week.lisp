@@ -25,7 +25,8 @@
       (:past (make-span (start-of-week now) (start-of-hour now)))
       (:none (make-span (start-of-week now) (datetime-1+ (start-of-week now) :week))))))
 
-;;; TODO: R-OFFSET?
+(defmethod r-offset ((repeater repeater-week) span amount pointer)
+  (span+ span (* amount (if (eql pointer :future) 1 -1)) :week))
 
 (defmethod r-width ((repeater repeater-week))
   +week-seconds+)

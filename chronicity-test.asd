@@ -18,5 +18,6 @@
              (:file "repeater-month")
              (:file "repeater-time")
              (:file "repeater-week")
-             (:file "repeater-weekend")))))
+             (:file "repeater-weekend")
+             (:file "repeater-year")))))
 
