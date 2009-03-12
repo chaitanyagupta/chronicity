@@ -12,8 +12,8 @@
                 (:future (datetime-incr (start-of-week now) :week))
                 (:past (datetime-decr (start-of-week now) :week))))
         (if (eql pointer :future)
-            (setf current-week-start (datetime-incr current-week-start :week))
-            (setf current-week-start (datetime-decr current-week-start :week))))
+            (datetime-incf current-week-start :week)
+            (datetime-decf current-week-start :week)))
     (make-span current-week-start (datetime-incr current-week-start :day 7))))
 
 (defmethod r-this ((repeater repeater-week) pointer)

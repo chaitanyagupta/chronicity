@@ -2,9 +2,13 @@
 
 ;;; Some constants
 
+(defconstant +sec-seconds+ 1)
+(defconstant +minute-seconds+ 60)
+(defconstant +hour-seconds+ (* 60 60))
 (defconstant +day-seconds+ (* 24 60 60))
 (defconstant +weekend-seconds+ (* 2 24 60 60))
 (defconstant +week-seconds+ (* 7 24 60 60))
+(defconstant +fortnight-seconds+ (* 14 24 60 60))
 (defconstant +month-seconds+ (* 30 24 60 60))
 (defconstant +year-seconds+ (* 365 24 60 60))
 (defconstant +year-months+ 12)
