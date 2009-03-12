@@ -71,7 +71,7 @@
                (yesterday-midnight (datetime-1- midnight :day))
                (tomorrow-midnight (datetime-1+ midnight :day))
                (midnight+tick (merge-datetime midnight tick-time))
-               (midday+tick (datetime+ midnight+tick halfday-hours :hour))
+               (midday+tick (datetime-incr midnight+tick halfday-hours :hour))
                (tomorrow+tick (merge-datetime tomorrow-midnight tick-time))
                (yesterday+tick (merge-datetime yesterday-midnight tick-time)))
           (if (eql pointer :future)
@@ -84,15 +84,15 @@
                      thereis (and (datetime>= time now) (setf current time))))
               (if (tick-ambiguousp tick)
                   (loop
-                     for time in (list midday+tick midnight+tick (datetime+ yesterday+tick halfday-hours :hour))
+                     for time in (list midday+tick midnight+tick (datetime-incr yesterday+tick halfday-hours :hour))
                      thereis (and (datetime<= time now) (setf current time)))
                   (loop
-                     for time in (list midnight+tick (datetime+ yesterday+tick halfday-hours :hour))
+                     for time in (list midnight+tick (datetime-incr yesterday+tick halfday-hours :hour))
                      thereis (and (datetime<= time now) (setf current time)))))))
       (unless first-time-p
         (setf current (if (tick-ambiguousp tick)
-                          (datetime+ current (if (eql pointer :future) halfday-hours (- halfday-hours)) :hour)
-                          (datetime+ current (if (eql pointer :future) 1 -1) :day))))
+                          (datetime-incr current (if (eql pointer :future) halfday-hours (- halfday-hours)) :hour)
+                          (datetime-incr current (if (eql pointer :future) 1 -1) :day))))
       (make-span current (datetime-1+ current :sec)))))
 
 (defmethod r-this ((repeater repeater-time) pointer)

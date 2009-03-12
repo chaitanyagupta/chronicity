@@ -89,20 +89,20 @@
       (decf new-month 12))
     (copy-datetime datetime :year new-year :month new-month)))
 
-(defun datetime+ (datetime amount unit)
+(defun datetime-incr (datetime amount unit)
   (case unit
     (:month (datetime-month+ datetime amount))
-    (:week (datetime+ datetime (* 7 amount) :day))
+    (:week (datetime-incr datetime (* 7 amount) :day))
     (t (local-time:timestamp+ datetime amount unit))))
 
-(defun datetime- (datetime amount unit)
-  (datetime+ datetime (- amount) unit))
+(defun datetime-decr (datetime amount unit)
+  (datetime-incr datetime (- amount) unit))
 
 (defun datetime-1+ (datetime unit)
-  (datetime+ datetime 1 unit))
+  (datetime-incr datetime 1 unit))
 
 (defun datetime-1- (datetime unit)
-  (datetime- datetime 1 unit))
+  (datetime-decr datetime 1 unit))
 
 (defun datetime-adjust (datetime value part)
   (case part
@@ -203,12 +203,12 @@
      (datetime-to-universal (span-start span))))
 
 (defun span+ (span amount unit)
-  (make-span (datetime+ (span-start span) amount unit)
-             (datetime+ (span-end span) amount unit)))
+  (make-span (datetime-incr (span-start span) amount unit)
+             (datetime-incr (span-end span) amount unit)))
 
 (defun span- (span amount unit)
-  (make-span (datetime- (span-start span) amount unit)
-             (datetime- (span-end span) amount unit)))
+  (make-span (datetime-decr (span-start span) amount unit)
+             (datetime-decr (span-end span) amount unit)))
 
 
 

@@ -8,12 +8,12 @@
     (with-slots (current now)
         repeater
       (if (not current)
-          (setf current (datetime+ (copy-date now) direction :day))
-          (setf current (datetime+ current direction :day)))
+          (setf current (datetime-incr (copy-date now) direction :day))
+          (setf current (datetime-incr current direction :day)))
       (loop
          with dow-index = (dow-index (tag-type repeater))
          while (/= (dow-of current) dow-index)
-         do (setf current (datetime+ current direction :day)))
+         do (setf current (datetime-incr current direction :day)))
       (make-span current (datetime-1+ current :day)))))
 
 (defmethod r-this ((repeater repeater-day-name) pointer)

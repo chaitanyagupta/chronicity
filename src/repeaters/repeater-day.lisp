@@ -9,7 +9,7 @@
     (when (not current)
       (setf current (copy-date now)))
     (let ((direction (if (eql pointer :future) 1 -1)))
-      (setf current (datetime+ current direction :day))
+      (setf current (datetime-incr current direction :day))
       (make-span current (datetime-1+ current :day)))))
 
 (defmethod r-this ((repeater repeater-day) pointer)

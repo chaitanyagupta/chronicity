@@ -8,8 +8,8 @@
     (with-slots (current now)
         repeater
       (if (not current)
-          (setf current (start-of-month (datetime+ now offset :month)))
-          (setf current (start-of-month (datetime+ current offset :month))))
+          (setf current (start-of-month (datetime-incr now offset :month)))
+          (setf current (start-of-month (datetime-incr current offset :month))))
       (make-span current (datetime-1+ (copy-date current) :month)))))
 
 (defmethod r-this ((repeater repeater-month) pointer)
