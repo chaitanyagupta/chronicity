@@ -6,7 +6,8 @@
   (local-time:encode-timestamp 0 0 0 0 day month year))
 
 (defun make-time (hour &optional (minute 0) (sec 0))
-  (local-time:adjust-timestamp (local-time:today)
+  (local-time:adjust-timestamp
+      (local-time:timestamp-minimize-part (local-time:make-timestamp) :hour)
     (offset :hour hour)
     (offset :minute minute)
     (offset :sec sec)))
