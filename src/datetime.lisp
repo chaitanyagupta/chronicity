@@ -103,6 +103,12 @@
     (:day-of-week (local-time:adjust-timestamp datetime (offset part value)))
     (t (local-time:adjust-timestamp datetime (set part value)))))
 
+(defmacro datetime-incf (place unit &optional (amount 1))
+  `(setf ,place (datetime-incr ,place ,unit ,amount)))
+
+(defmacro datetime-decf (place unit &optional (amount 1))
+  `(setf ,place (datetime-decr ,place ,unit ,amount)))
+
 ;;; Date time comparisons
 
 (defun datetime< (&rest args)
