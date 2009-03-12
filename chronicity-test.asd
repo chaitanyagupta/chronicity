@@ -1,1 +1,0 @@
-test/chronicity-test.asd
