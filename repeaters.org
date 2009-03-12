@@ -12,6 +12,7 @@
 + [ ] repeater_season.rb
 + [X] repeater_second.rb
 + [X] repeater_time.rb
++ [ ] repeater_weekday.rb
 + [X] repeater_weekend.rb
 + [X] repeater_week.rb
 + [X] repeater_year.rb
