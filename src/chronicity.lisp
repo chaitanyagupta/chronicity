@@ -17,11 +17,16 @@
 
 #.(cl-interpol:enable-interpol-syntax)
 
-(defun parse (string &key context now guess ambiguous-time-range)
+(defun parse (text
+              &key context now guess ambiguous-time-range
+              &aux tokens)
   "The API."
-  
-
-  )
+  (setf text (pre-normalize text))
+  (setf tokens (tokenize text))
+  (loop
+     for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator) ; 'timezone
+     do (scan-tokens type tokens))
+  tokens)
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))

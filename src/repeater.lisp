@@ -64,10 +64,11 @@
     (loop
        for (regex keyword) in scan-map
        when (cl-ppcre:scan regex word)
-       return keyword)))
+       return (create-tag (intern (format nil "REPEATER-~A" keyword) :chronicity)
+                          keyword))))
 
-;;; This will be used by the R-NEXT and R-THIS method of REPEATER's
-;;; subclasses
+;;; We wrap CHECK-POINTER around the R-NEXT and R-THIS so that pointer
+;;; is checked for sanity before any invocation of these methods
 
 (defun check-pointer (pointer)
   (let ((list (list :future :none :past)))
