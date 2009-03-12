@@ -20,9 +20,9 @@
           (or target-year (error "TARGET-YEAR should have been set by now."))
           (setf current (make-date target-year target-month)))
         (ecase pointer
-          (:future (setf current (datetime-incr current 1 :year)))
-          (:past (setf current (datetime-decr current 1 :year)))))
-    (make-span current (datetime-incr current 1 :month))))
+          (:future (setf current (datetime-incr current :year 1)))
+          (:past (setf current (datetime-decr current :year 1)))))
+    (make-span current (datetime-incr current :month 1))))
 
 (defmethod r-this ((repeater repeater-month-name) pointer)
   (ecase pointer

@@ -9,21 +9,21 @@
     (if (not current-week-start)
         (setf current-week-start
               (case pointer
-                (:future (datetime-1+ (start-of-week now) :week))
-                (:past (datetime-1- (start-of-week now) :week))))
+                (:future (datetime-incr (start-of-week now) :week))
+                (:past (datetime-decr (start-of-week now) :week))))
         (if (eql pointer :future)
-            (setf current-week-start (datetime-1+ current-week-start :week))
-            (setf current-week-start (datetime-1- current-week-start :week))))
-    (make-span current-week-start (datetime-incr current-week-start 7 :day))))
+            (setf current-week-start (datetime-incr current-week-start :week))
+            (setf current-week-start (datetime-decr current-week-start :week))))
+    (make-span current-week-start (datetime-incr current-week-start :day 7))))
 
 (defmethod r-this ((repeater repeater-week) pointer)
   (with-slots (now)
       repeater
     (ecase pointer
-      (:future (make-span (datetime-1+ (start-of-hour now) :hour)
-                          (datetime-1+ (start-of-week now) :week)))
+      (:future (make-span (datetime-incr (start-of-hour now) :hour)
+                          (datetime-incr (start-of-week now) :week)))
       (:past (make-span (start-of-week now) (start-of-hour now)))
-      (:none (make-span (start-of-week now) (datetime-1+ (start-of-week now) :week))))))
+      (:none (make-span (start-of-week now) (datetime-incr (start-of-week now) :week))))))
 
 (defmethod r-offset ((repeater repeater-week) span amount pointer)
   (span+ span (* amount (if (eql pointer :future) 1 -1)) :week))

@@ -33,15 +33,15 @@
                         ((< now-sec range-start-sec)
                          (case pointer
                            (:future (merge-datetime now range-start))
-                           (:past (merge-datetime (datetime-1- now :day) range-start))))
+                           (:past (merge-datetime (datetime-decr now :day) range-start))))
                         ((> now-sec range-start-sec)
                          (case pointer
-                           (:future (merge-datetime (datetime-1+ now :day) range-start))
+                           (:future (merge-datetime (datetime-incr now :day) range-start))
                            (:past (merge-datetime now range-start))))
                         (t
                          (case pointer
-                           (:future (merge-datetime (datetime-1+ now :day) range-start))
-                           (:past (merge-datetime (datetime-1- now :day) range-start)))))))
+                           (:future (merge-datetime (datetime-incr now :day) range-start))
+                           (:past (merge-datetime (datetime-decr now :day) range-start)))))))
           (if start
               (setf current (make-span start (merge-datetime start (span-end range))))
               (error "Start should not be NIL.")))
