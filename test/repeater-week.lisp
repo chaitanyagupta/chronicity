@@ -46,7 +46,7 @@
 
 (define-test week-offset
   (let* ((now (make-datetime 2006 8 16 14))
-         (span (make-span now (datetime-1+ now :sec)))
+         (span (make-span now (datetime-incr now :sec)))
          (offset-span (r-offset (create-tag 'repeater-week :week)
                                 span 3 :future)))
     (assert-datetime= (make-datetime 2006 9 6 14) (span-start offset-span))

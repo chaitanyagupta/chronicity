@@ -3,7 +3,7 @@
 (define-test month-offset
   (let* ((now (make-datetime 2006 8 16 14))
          (repeater (create-tag 'repeater-month :month))
-         (span (make-span now (datetime-1+ now :hour)))
+         (span (make-span now (datetime-incr now :hour)))
          (offset-span nil))
 
     ;; future

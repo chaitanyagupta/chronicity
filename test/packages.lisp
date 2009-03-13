@@ -34,6 +34,6 @@
 (in-package #:chronicity-test)
 
 (defun run-suite ()
-  (run-all-tests :chronicity)
-  (run-all-tests :chronicity-test))
+  (run-all-tests :chronicity-test)
+  (run-all-tests :chronicity-repeater-test))
 

@@ -41,7 +41,7 @@
 
 (define-test year-offset
   (let* ((now (make-datetime 2006 8 16 14))
-         (span (make-span now (datetime-1+ now :sec)))
+         (span (make-span now (datetime-incr now :sec)))
          (repeater (create-tag 'repeater-year :year))
          (offset-span))
 
