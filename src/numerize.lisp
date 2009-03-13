@@ -61,36 +61,61 @@
 
   ;; Hundreds, thousands, etc. to numerals
   (dolist (num *big-prefixes*)
-    (rr-all-f string #?r"(\d*) *${(first num)}"
-              (lambda (match &rest registers)
-                (declare (ignorable match))
-                (format nil "~A"
-                        (* (second num)
-                           (or (parse-integer (or (first registers) "1")
-                                              :junk-allowed t)
-                               1))))
-              :simple-calls t))
+    (rr-all-f string (first num) (format nil "~A" (second num))))
 
   ;; Remove the 'and' or '&' between numerals
   (rr-all-f string #?r"(\d)\s+(?:and|&)\s+(\d)" "\\1 \\2")
 
-  (values (add-adjacent-numbers string)))
+  (values (combine-adjacent-numbers string)))
 
-(defun add-adjacent-numbers (string)
-  (cl-ppcre:regex-replace-all
-   #?r"(\d+)( +\d+)*"
-   string
-   (lambda (match &rest registers)
-     (declare (ignore registers))
-     (let ((index 0)
-           (num))
-       (format nil "~A"
-               (loop
-                  do (multiple-value-setq (num index)
-                       (parse-integer match :start index :junk-allowed t))
-                  while num
-                  summing num))))
-   :simple-calls t))
+(defun combine-adjacent-numbers (string)
+  (let* ((bi-pairs (loop
+                      for index = 0 then end
+                      for (start end) = (multiple-value-list
+                                         (cl-ppcre:scan #?/\b\d+(\s+\d+)*\b/ string
+                                                        :start index))
+                      while start
+                      collect (list start end)))
+         (number-strings (mapcar #'(lambda (x)
+                                     (subseq string (first x) (second x)))
+                                 bi-pairs))
+         (numbers (mapcar #'compute-number number-strings)))
+    (loop
+       with result = string
+       for (start end) in bi-pairs
+       for number in numbers
+       for str = (format nil "~A" number)
+       for diff = (- (- end start) (length str))
+       for fillbuf = (make-string diff :initial-element #\Null)
+       for str2 = (concatenate 'string str fillbuf)
+       while start
+       do (setf result (replace result str2 :start1 start :end1 end))
+       finally (return (cl-ppcre:regex-replace #?/\x0+/ result "")))))
+
+(defun compute-number (string)
+  (let ((index 0)
+        (number nil))
+    (loop
+       do (setf (values number index)
+                (parse-integer string
+                               :start index
+                               :junk-allowed t))
+       while (and number (numberp index))
+       collect number into numbers
+       finally (return (compute-number-aux numbers)))))
+
+(defun compute-number-aux (numbers)
+  (cond
+    ((null numbers) (error "Can't pass an empty list."))
+    ((= (length numbers) 1) (first numbers))
+    ((<= (first numbers) (second numbers))
+     (compute-number-aux
+      (cons (* (first numbers) (second numbers)) (cddr numbers))))
+    ((every (lambda (n) (>= (first numbers) n)) (cdr numbers))
+     (+ (first numbers) (compute-number-aux (cdr numbers))))
+    (t
+     (compute-number-aux
+      (cons (+ (first numbers) (second numbers)) (cddr numbers))))))
 
 ;;; Disable cl-interpol reader
 
