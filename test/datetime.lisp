@@ -91,3 +91,20 @@
     (assert-true (datetime< ts4 ts3))
     (assert-true (datetime> ts3 ts4))))
 
+(define-test datetime-overflow
+  ;; next minute
+  (assert-datetime= (make-datetime 2009 3 14 13 59 0)
+                    (datetime-incr (make-datetime 2009 3 14 13 58 59) :sec))
+  ;; next hour
+  (assert-datetime= (make-datetime 2009 3 14 14 0 0)
+                    (datetime-incr (make-datetime 2009 3 14 13 59 0) :minute))
+  ;; next day
+  (assert-datetime= (make-datetime 2009 3 15 0 0 0)
+                    (datetime-incr (make-datetime 2009 3 14 23 0 0) :hour))
+  ;; next month
+  (assert-datetime= (make-datetime 2009 4 1 0 0 0)
+                    (datetime-incr (make-datetime 2009 3 31 0 0 0) :day))
+  ;; next year
+  (assert-datetime= (make-datetime 2010 1 1 0 0 0)
+                    (datetime-incr (make-datetime 2009 12 1 0 0 0) :month)))
+
