@@ -1,4 +1,4 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
 (defmacro assert-datetime= (expected form)
   (let ((value (gensym "RESULT-")))

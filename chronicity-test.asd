@@ -13,6 +13,7 @@
              (:file "packages")
              (:file "utils")
              (:file "numerize")
+             (:file "datetime")
              (:file "repeater-day-name")
              (:file "repeater-fortnight")
              (:file "repeater-hour")
