@@ -19,7 +19,7 @@
   (make-instance 'tick :time time :ambiguousp ambiguousp))
 
 (defmethod initialize-instance :after ((repeater repeater-time) &key type)
-  (let* ((ts (cl-ppcre:regex-replace #?r"\:" type ""))
+  (let* ((ts (cl-ppcre:regex-replace-all #?r"\:" type ""))
          (ts-size (length ts)))
     (setf (slot-value repeater 'type)
           (cond
