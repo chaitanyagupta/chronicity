@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test hour-next-future
+(define-test repeater-hour-next-future
   (let* ((now (make-datetime 2006 8 16 14))
          (hours (create-tag 'repeater-hour :hour :now now))
          (next-hour))
@@ -13,7 +13,7 @@
     (assert-datetime= (make-datetime 2006 8 16 16) (span-start next-hour))
     (assert-datetime= (make-datetime 2006 8 16 17) (span-end next-hour))))
 
-(define-test hour-next-past
+(define-test repeater-hour-next-past
   (let* ((now (make-datetime 2006 8 16 14))
          (hours (create-tag 'repeater-hour :hour :now now))
          (next-hour))
@@ -26,7 +26,7 @@
     (assert-datetime= (make-datetime 2006 8 16 12) (span-start next-hour))
     (assert-datetime= (make-datetime 2006 8 16 13) (span-end next-hour))))
 
-(define-test hour-this
+(define-test repeater-hour-this
   (let* ((now (make-datetime 2006 8 16 14 30))
          (hours (create-tag 'repeater-hour :hour :now now))
          (this-hour))
@@ -39,7 +39,7 @@
     (assert-datetime= (make-datetime 2006 8 16 14) (span-start this-hour))
     (assert-datetime= (make-datetime 2006 8 16 14 30) (span-end this-hour))))
 
-(define-test hour-offset
+(define-test repeater-hour-offset
   (let* ((now (make-datetime 2006 8 16 14))
          (span (make-span now (datetime-incr now :sec)))
          (offset-span)

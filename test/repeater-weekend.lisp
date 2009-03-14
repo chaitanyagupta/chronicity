@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test weekend-next-future
+(define-test repeater-weekend-next-future
   (let* ((now (make-datetime 2006 8 16 14))
          (weekend (create-tag 'repeater-weekend :weekend :now now))
          (next-weekend (r-next weekend :future)))
@@ -8,7 +8,7 @@
     (assert-datetime= (make-datetime 2006 8 19) (span-start next-weekend))
     (assert-datetime= (make-datetime 2006 8 21) (span-end next-weekend))))
 
-(define-test weekend-next-past
+(define-test repeater-weekend-next-past
   (let* ((now (make-datetime 2006 8 16 14))
          (weekend (create-tag 'repeater-weekend :weekend :now now))
          (next-weekend (r-next weekend :past)))
@@ -16,7 +16,7 @@
     (assert-datetime= (make-datetime 2006 8 12) (span-start next-weekend))
     (assert-datetime= (make-datetime 2006 8 14) (span-end next-weekend))))
 
-(define-test weekend-this-future
+(define-test repeater-weekend-this-future
   (let* ((now (make-datetime 2006 8 16 14))
          (weekend (create-tag 'repeater-weekend :weekend :now now))
          (next-weekend (r-this weekend :future)))
@@ -24,7 +24,7 @@
     (assert-datetime= (make-datetime 2006 8 19) (span-start next-weekend))
     (assert-datetime= (make-datetime 2006 8 21) (span-end next-weekend))))
 
-(define-test weekend-this-past
+(define-test repeater-weekend-this-past
   (let* ((now (make-datetime 2006 8 16 14))
          (weekend (create-tag 'repeater-weekend :weekend :now now))
          (next-weekend (r-this weekend :past)))
@@ -32,7 +32,7 @@
     (assert-datetime= (make-datetime 2006 8 12) (span-start next-weekend))
     (assert-datetime= (make-datetime 2006 8 14) (span-end next-weekend))))
 
-(define-test weekend-this-none
+(define-test repeater-weekend-this-none
   (let* ((now (make-datetime 2006 8 16 14))
          (weekend (create-tag 'repeater-weekend :weekend :now now))
          (next-weekend (r-this weekend :none)))
@@ -40,7 +40,7 @@
     (assert-datetime= (make-datetime 2006 8 19) (span-start next-weekend))
     (assert-datetime= (make-datetime 2006 8 21) (span-end next-weekend))))
 
-(define-test weekend-offset
+(define-test repeater-weekend-offset
   (let* ((now (make-datetime 2006 8 16 14))
          (span (make-span now (datetime-incr now :sec)))
          (repeater (create-tag 'repeater-weekend :weekend))

@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test month-name-next
+(define-test repeater-month-name-next
   (let* ((now (make-datetime 2006 8 16 14))
          (mays (create-tag 'repeater-month-name :may :now now))
          (decembers (create-tag 'repeater-month-name :december :now now))
@@ -28,7 +28,7 @@
     (setf next-may (r-next mays :past))
     (assert-datetime= (make-datetime 2005 5) (span-start next-may))))
 
-(define-test month-name-this
+(define-test repeater-month-name-this
   (let* ((now (make-datetime 2006 8 16 14))
          (octobers (create-tag 'repeater-month-name :october :now now))
          (this-october (r-this octobers :future))

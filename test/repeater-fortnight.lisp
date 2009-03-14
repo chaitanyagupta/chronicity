@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test fortnight-next-future
+(define-test repeater-fortnight-next-future
   (let* ((now (make-datetime 2006 8 16 14))
          (fortnights (create-tag 'repeater-fortnight :fortnight :now now))
          (next-fortnight))
@@ -12,7 +12,7 @@
     (assert-datetime= (make-datetime 2006 9 3) (span-start next-fortnight))
     (assert-datetime= (make-datetime 2006 9 17) (span-end next-fortnight))))
 
-(define-test fortnight-next-past
+(define-test repeater-fortnight-next-past
   (let* ((now (make-datetime 2006 8 16 14))
          (fortnights (create-tag 'repeater-fortnight :fortnight :now now))
          (next-fortnight))
@@ -24,21 +24,21 @@
     (assert-datetime= (make-datetime 2006 7 16) (span-start next-fortnight))
     (assert-datetime= (make-datetime 2006 7 30) (span-end next-fortnight))))
 
-(define-test fortnight-this-future
+(define-test repeater-fortnight-this-future
   (let* ((now (make-datetime 2006 8 16 14))
          (fortnights (create-tag 'repeater-fortnight :fortnight :now now))
          (this-fortnight (r-this fortnights :future)))
     (assert-datetime= (make-datetime 2006 8 16 15) (span-start this-fortnight))
     (assert-datetime= (make-datetime 2006 8 27) (span-end this-fortnight))))
 
-(define-test fortnight-this-past
+(define-test repeater-fortnight-this-past
   (let* ((now (make-datetime 2006 8 16 14))
          (fortnights (create-tag 'repeater-fortnight :fortnight :now now))
          (this-fortnight (r-this fortnights :past)))
     (assert-datetime= (make-datetime 2006 8 13 0) (span-start this-fortnight))
     (assert-datetime= (make-datetime 2006 8 16 14) (span-end this-fortnight))))
 
-(define-test fortnight-offset
+(define-test repeater-fortnight-offset
   (let* ((now (make-datetime 2006 8 16 14))
          (span (make-span now (datetime-incr now :sec)))
          (offset-span (r-offset (create-tag 'repeater-fortnight :fortnight)

@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test week-next-future
+(define-test repeater-week-next-future
   (let* ((now (make-datetime 2006 8 16 14))
          (weeks (create-tag 'repeater-week :week :now now))
          (next-week))
@@ -13,7 +13,7 @@
     (assert-datetime= (make-datetime 2006 8 27) (span-start next-week))
     (assert-datetime= (make-datetime 2006 9 3) (span-end next-week))))
 
-(define-test week-next-past
+(define-test repeater-week-next-past
   (let* ((now (make-datetime 2006 8 16 14))
          (weeks (create-tag 'repeater-week :week :now now))
          (next-week))
@@ -26,7 +26,7 @@
     (assert-datetime= (make-datetime 2006 7 30) (span-start next-week))
     (assert-datetime= (make-datetime 2006 8 6) (span-end next-week))))
 
-(define-test week-this-future
+(define-test repeater-week-this-future
   (let* ((now (make-datetime 2006 8 16 14))
          (weeks (create-tag 'repeater-week :week :now now))
          (this-week))
@@ -35,7 +35,7 @@
     (assert-datetime= (make-datetime 2006 8 16 15) (span-start this-week))
     (assert-datetime= (make-datetime 2006 8 20) (span-end this-week))))
 
-(define-test week-this-past
+(define-test repeater-week-this-past
   (let* ((now (make-datetime 2006 8 16 14))
          (weeks (create-tag 'repeater-week :week :now now))
          (this-week))
@@ -44,7 +44,7 @@
     (assert-datetime= (make-datetime 2006 8 13 0) (span-start this-week))
     (assert-datetime= (make-datetime 2006 8 16 14) (span-end this-week))))
 
-(define-test week-offset
+(define-test repeater-week-offset
   (let* ((now (make-datetime 2006 8 16 14))
          (span (make-span now (datetime-incr now :sec)))
          (offset-span (r-offset (create-tag 'repeater-week :week)

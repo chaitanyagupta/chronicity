@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test month-offset
+(define-test repeater-month-offset
   (let* ((now (make-datetime 2006 8 16 14))
          (repeater (create-tag 'repeater-month :month))
          (span (make-span now (datetime-incr now :hour)))

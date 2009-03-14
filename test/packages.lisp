@@ -2,23 +2,7 @@
 
 (defpackage #:chronicity-test
   (:use #:cl #:lisp-unit)
-  (:export #:run-suite)
-  (:import-from #:chronicity
-                ))
-
-(defpackage #:chronicity-repeater-test
-  (:use #:cl #:lisp-unit)
-  (:import-from #:chronicity
-                #:create-token
-                #:create-tag
-                #:tag-type
-                #:tag-now
-                #:r-next
-                #:r-this
-                #:r-width
-                #:r-offset
-                #:now
-                #:tick-time))
+  (:export #:run-suite))
 
 (do-symbols (s :chronicity)
   (let ((name (symbol-name s)))
@@ -49,14 +33,10 @@
                    (search "TIME" name)
                    (search "DATETIME" name)
                    (search "SPAN" name)))
-      (import s :chronicity-test)
-      (import s :chronicity-repeater-test))))
-
-(import 'chronicity-test::assert-datetime= :chronicity-repeater-test)
+      (import s :chronicity-test))))
 
 (in-package #:chronicity-test)
 
 (defun run-suite ()
-  (run-all-tests :chronicity-test)
-  (run-all-tests :chronicity-repeater-test))
+  (run-all-tests :chronicity-test))
 

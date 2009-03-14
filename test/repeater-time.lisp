@@ -1,6 +1,6 @@
-(cl:in-package #:chronicity-repeater-test)
+(cl:in-package #:chronicity-test)
 
-(define-test time-next-future
+(define-test repeater-time-next-future
   (let* ((now (make-datetime 2006 8 16 14))
          (tr (create-tag 'repeater-time "4:00" :now now)))
 
@@ -15,7 +15,7 @@
     (assert-datetime= (make-datetime 2006 8 17 4) (span-start (r-next tr :future)))
     (assert-datetime= (make-datetime 2006 8 18 4) (span-start (r-next tr :future)))))
 
-(define-test time-next-past
+(define-test repeater-time-next-past
   (let* ((now (make-datetime 2006 8 16 14))
          (tr (create-tag 'repeater-time "4:00" :now now)))
 
@@ -26,7 +26,7 @@
     (assert-datetime= (make-datetime 2006 8 16 13) (span-start (r-next tr :past)))
     (assert-datetime= (make-datetime 2006 8 15 13) (span-start (r-next tr :past)))))
 
-(define-test test-type
+(define-test repeater-time-test-type
   (let ((tr nil))
     (flet ((!create-tag (str)
              (create-tag 'repeater-time str))
