@@ -100,7 +100,7 @@ For more information, see lisp-unit.html.
 
 (cl:defpackage #:lisp-unit
   (:use #:common-lisp)
-  (:export #:define-test #:run-all-tests #:run-package-tests #:run-tests
+  (:export #:define-test #:run-all-tests #:run-tests
            #:assert-eq #:assert-eql #:assert-equal #:assert-equalp
            #:assert-error #:assert-expands #:assert-false 
            #:assert-equality #:assert-prints #:assert-true
@@ -213,12 +213,6 @@ For more information, see lisp-unit.html.
       ,@(mapcar #'(lambda (test) (find-symbol (symbol-name test) package))
           tests))))
 
-(defmacro run-package-tests (&rest packages)
-  `(run-test-thunks
-    (get-test-thunks (loop
-                        for package in (list ,@packages)
-                        append (get-tests package)))))
-
 (defmacro run-tests (&rest names)
   `(run-test-thunks (get-test-thunks ,(if (null names) '(get-tests *package*) `',names))))
 
@@ -243,10 +237,7 @@ For more information, see lisp-unit.html.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun get-test-code (name &optional (package *package*))
-  (let* ((package (if (symbolp name)
-                      (symbol-package name)
-                      package))
-         (table (get-package-table package)))
+  (let ((table (get-package-table package)))
     (unless (null table)
       (gethash name table))))
 
