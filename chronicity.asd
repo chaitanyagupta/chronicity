@@ -38,7 +38,8 @@
              (:file "pointer")
              (:file "scalar")
              (:file "ordinal")
-             (:file "separator")))))
+             (:file "separator")
+             (:file "handlers")))))
 
 (defmethod perform ((o test-op) (c (eql (find-system :chronicity))))
   (operate 'load-op :chronicity-test)
