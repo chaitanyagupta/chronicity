@@ -48,6 +48,13 @@
   (and (scan #?r"^in$" (token-word token))
        (create-tag 'separator-in :in)))
 
+(defclass separator-on (tag)
+  ())
+
+(defun scan-for-on (token)
+  (and (scan #?r"^on$" (token-word token))
+       (create-tag 'separator-on :on)))
+
 ;;; Disable cl-interpol reader
 
 #.(cl-interpol:disable-interpol-syntax)
