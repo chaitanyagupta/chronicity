@@ -16,14 +16,14 @@
     (awhen (scan-for-at token) (tag it token))
     (awhen (scan-for-in token) (tag it token))))
 
-(defclass separator-comma (tag)
+(defclass separator-comma (separator)
   ())
 
 (defun scan-for-commas (token)
   (and (scan "^,$" (token-word token))
        (create-tag 'separator-comma :comma)))
 
-(defclass separator-slash-or-dash (tag)
+(defclass separator-slash-or-dash (separator)
   ())
 
 (defun scan-for-slash-or-dash (token)
@@ -34,21 +34,21 @@
        when (scan regex (token-word token))
        return (create-tag 'separator-slash-or-dash value))))
 
-(defclass separator-at (tag)
+(defclass separator-at (separator)
   ())
 
 (defun scan-for-at (token)
-  (and (scan #?r"^(at}@)$" (token-word token))
+  (and (scan #?r"^(at|@)$" (token-word token))
        (create-tag 'separator-at :at)))
 
-(defclass separator-in (tag)
+(defclass separator-in (separator)
   ())
 
 (defun scan-for-in (token)
   (and (scan #?r"^in$" (token-word token))
        (create-tag 'separator-in :in)))
 
-(defclass separator-on (tag)
+(defclass separator-on (separator)
   ())
 
 (defun scan-for-on (token)

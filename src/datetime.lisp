@@ -182,7 +182,7 @@
         :reader span-end)
    (end-included-p :initarg :end-included-p
                    :reader span-end-included-p
-                   :initform t)))
+                   :initform nil)))
 
 (defmethod print-object ((x span) stream)
   (flet ((!format-span ()
@@ -195,7 +195,7 @@
           (!format-span))
         (!format-span))))
 
-(defun make-span (start end &optional (end-included-p t))
+(defun make-span (start end &optional (end-included-p nil))
   (make-instance 'span :start start :end end :end-included-p end-included-p))
 
 (defun span-width (span)

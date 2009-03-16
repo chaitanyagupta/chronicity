@@ -1,9 +1,9 @@
 (cl:in-package #:chronicity)
 
-(defparameter *morning* (make-span (make-time 6) (make-time 12) nil))
-(defparameter *afternoon* (make-span (make-time 13) (make-time 17) nil))
-(defparameter *evening* (make-span (make-time 17) (make-time 20) nil))
-(defparameter *night* (make-span (make-time 20) (make-time 24) nil))
+(defparameter *morning* (make-span (make-time 6) (make-time 12)))
+(defparameter *afternoon* (make-span (make-time 13) (make-time 17)))
+(defparameter *evening* (make-span (make-time 17) (make-time 20)))
+(defparameter *night* (make-span (make-time 20) (make-time 24)))
 
 (defclass repeater-day-portion (repeater)
   ((range :initform nil)

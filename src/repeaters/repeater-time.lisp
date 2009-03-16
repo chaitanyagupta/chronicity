@@ -6,8 +6,8 @@
   ((current :initform nil)))
 
 (defclass tick ()
-  ((time :initarg :time :reader tick-time)
-   (ambiguousp :initarg :ambiguousp :reader tick-ambiguousp)))
+  ((time :initarg :time :accessor tick-time)
+   (ambiguousp :initarg :ambiguousp :accessor tick-ambiguousp)))
 
 (defmethod print-object ((x tick) stream)
   (print-unreadable-object (x stream :type t)
@@ -87,7 +87,7 @@
                      for time in (list midday+tick midnight+tick (datetime-incr yesterday+tick :hour halfday-hours))
                      thereis (and (datetime<= time now) (setf current time)))
                   (loop
-                     for time in (list midnight+tick (datetime-incr yesterday+tick :hour halfday-hours))
+                     for time in (list midnight+tick yesterday+tick)
                      thereis (and (datetime<= time now) (setf current time)))))))
       (unless first-time-p
         (setf current (if (tick-ambiguousp tick)

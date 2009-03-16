@@ -17,7 +17,7 @@
     (create-tag 'ordinal (parse-integer (token-word token)
                                         :junk-allowed t))))
 
-(defclass ordinal-day (tag)
+(defclass ordinal-day (ordinal)
   ())
 
 (defun scan-for-ordinal-days (token)

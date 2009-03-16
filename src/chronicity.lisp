@@ -17,8 +17,14 @@
 
 #.(cl-interpol:enable-interpol-syntax)
 
-(defun parse (text
-              &key context now guess ambiguous-time-range
+(defvar *context* :future)
+(defvar *now*)
+
+(defun parse (text &key
+              ((:context *context*) :future)
+              ((:now *now*) (now))
+              guess
+              ambiguous-time-range
               &aux tokens)
   "The API."
   (setf text (pre-normalize text))
@@ -96,6 +102,14 @@
 
 (defmethod untag ((x symbol) token)
   (untag (find-class x) token))
+
+(defun token-has-tag-p (token tag-name)
+  (some #'(lambda (tag) (typep tag tag-name)) (token-tags token)))
+
+(defun find-tag (tag-name token)
+  (find-if #'(lambda (x)
+               (typep x tag-name))
+           (token-tags token)))
 
 ;;; Generic token scanner
 

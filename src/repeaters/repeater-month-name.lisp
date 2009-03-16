@@ -27,7 +27,7 @@
 (defmethod r-this ((repeater repeater-month-name) pointer)
   (ecase pointer
     (:past (r-next repeater :past))
-    ((:future :none) (r-next repeater :none))))
+    ((:future :none) (r-next repeater :future))))
 
 (defmethod r-width ((repeater repeater-month-name))
   +month-seconds+)

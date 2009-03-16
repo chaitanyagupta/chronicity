@@ -39,7 +39,8 @@
              (:file "scalar")
              (:file "ordinal")
              (:file "separator")
-             (:file "handlers")))))
+             (:file "handlers")
+             (:file "handler-defs")))))
 
 (defmethod perform ((o test-op) (c (eql (find-system :chronicity))))
   (operate 'load-op :chronicity-test)

@@ -21,16 +21,18 @@
 (defun scan-for-month-names (token &aux (word (token-word token)))
   (loop
      for month in *months*
-     when (cl-ppcre:scan (cl-ppcre:create-scanner word :case-insensitive-mode t)
-                         (string month))
+     for regex = (string month)
+     when (cl-ppcre:scan (cl-ppcre:create-scanner regex :case-insensitive-mode t)
+                         word)
      return (create-tag 'repeater-month-name month)))
 
 ;;; TODO: Check for spelling mistakes
 (defun scan-for-day-names (token &aux (word (token-word token)))
   (loop
      for day in *days-of-week*
-     when (cl-ppcre:scan (cl-ppcre:create-scanner word :case-insensitive-mode t)
-                         (string day))
+     for regex = (string day)
+     when (cl-ppcre:scan (cl-ppcre:create-scanner regex :case-insensitive-mode t)
+                         word)
      return (create-tag 'repeater-day-name day)))
 
 (defun scan-for-day-portions (token &aux (word (token-word token)))
