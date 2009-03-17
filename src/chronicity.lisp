@@ -112,6 +112,9 @@
                (typep x tag-name))
            (token-tags token)))
 
+(defun token-tag-type (tag-name token)
+  (tag-type (find-tag tag-name token)))
+
 ;;; Generic token scanner
 
 (defgeneric scan-tokens (tag tokens)
