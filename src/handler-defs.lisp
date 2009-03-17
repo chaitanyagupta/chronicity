@@ -26,6 +26,14 @@
                                 (tag-type day-tag))))
     (merge-time-tokens-day (nthcdr 3 tokens) date-start)))
 
+(defun guess-year (month day)
+  (let* ((today (copy-date *now*))
+         (this-year (year-of *now*))
+         (this-year-date (make-date this-year month day)))
+    (ecase *context*
+      (:future (if (datetime< this-year-date today) (1+ this-year) this-year))
+      (:past (if (datetime> this-year-date today) (1- this-year) this-year)))))
+
 (define-handler (date handle-rmn-sd)
     ((repeater-month-name scalar-day (? separator-at) (? p time)))
     (tokens)
@@ -34,11 +42,7 @@
          (day-tag (find-tag 'scalar-day (second tokens)))
          (month (month-index (tag-type month-name-tag)))
          (day (tag-type day-tag))
-         (this-year (year-of *now*))
-         (this-year-date (make-date this-year month day))
-         (year (ecase *context*
-                 (:future (if (datetime< this-year-date *now*) (1+ this-year) this-year))
-                 (:past (if (datetime> this-year-date *now*) (1- this-year) this-year))))
+         (year (guess-year month day))
          (date-start (make-date year month day)))
     (merge-time-tokens-day (nthcdr 2 tokens) date-start)))
 
@@ -95,6 +99,43 @@
          (day (tag-type (find-tag 'ordinal-day day-token))))
     (tag (create-tag 'scalar-day day) day-token)
     (handle-rmn-sd-sy (list* (second tokens) day-token (nthcdr 2 tokens)))))
+
+(define-handler (date)
+    ((scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p time)))
+    (tokens)
+  (setf tokens (remove-separators tokens))
+  (let* ((year (tag-type (find-tag 'scalar-year (first tokens))))
+         (month (tag-type (find-tag 'scalar-month (second tokens))))
+         (day (tag-type (find-tag 'scalar-day (third tokens))))
+         (date-start (make-date year month day)))
+    (merge-time-tokens-day (nthcdr 3 tokens) date-start)))
+
+;;; FIXME: The below patterns should have (or scalar-month scalar-day)
+;;; instead of scalar-month
+(define-handler (date)
+    ((scalar-month separator-slash-or-dash scalar-month separator-slash-or-dash scalar-year (? separator-at) (? p time))
+     (scalar-month separator-slash-or-dash scalar-month (? separator-at) (? p time)))
+    (tokens)
+  (setf tokens (remove-separators tokens))
+  (destructuring-bind (day month)
+      (ecase *endian-preference*
+        (:little (list (tag-type (find-tag 'scalar-day (first tokens)))
+                       (tag-type (find-tag 'scalar-month (second tokens)))))
+        (:middle (list (tag-type (find-tag 'scalar-month (second tokens)))
+                       (tag-type (find-tag 'scalar-day (first tokens))))))
+    (let ((year (if (equalp (handler-pattern *handler*) (first *handler-patterns*))
+                    (tag-type (find-tag 'scalar-year (third tokens)))
+                    (guess-year month day))))
+      (merge-time-tokens-day (nthcdr 3 tokens) (make-date year month day)))))
+
+(define-handler (date)
+    ((scalar-month separator-slash-or-dash scalar-year))
+    (tokens)
+  (setf tokens (remove-separators tokens))
+  (let ((month (tag-type (find-tag 'scalar-month (first tokens))))
+        (year (tag-type (find-tag 'scalar-year (second tokens)))))
+    (make-span (make-date year month)
+               (datetime-incr (make-date year month) :month))))
 
 ;;; Time handlers
 

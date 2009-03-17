@@ -1,8 +1,5 @@
 (cl:in-package #:chronicity)
 
-(defvar *endian-handler-1* nil)
-(defvar *endian-handler-2* nil)
-
 (defun make-handler (class pattern fn)
   (list class pattern fn))
 
@@ -16,6 +13,7 @@
   (third handler))
 
 (defparameter *handlers* nil)
+(defvar *handler-patterns*)
 
 (defun clear-handlers ()
   (setf *handlers* nil))
@@ -31,9 +29,9 @@
                           patterns &optional lambda-list
                           &body body)
   `(progn
-     , (when (and lambda-list body)
-         `(defun ,name ,lambda-list
-            ,@body))
+     (defun ,name ,lambda-list
+       (let ((*handler-patterns* ',patterns))
+         ,@body))
      (add-handler ',class ',patterns ',name)))
 
 (defun add-handler (class patterns fn)
@@ -43,7 +41,8 @@
     (setf *handlers* (nconc *handlers* handlers))))
 
 (progn
-      (list (make-handler 'time '(repeater-time (? repeater-day-portion)) nil))) ; DONE
+      (list ; (make-handler 'time '(repeater-time (? repeater-day-portion)) nil)
+            ))
 
 (progn
       (list (make-handler 'date '(repeater-day-name repeater-month-name scalar-day repeater-time (? separator-slash-or-dash) time-zone scalar-year) 'handle-rdn-rmn-sd-t-tz-sy)
@@ -55,11 +54,12 @@
             ; (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name ordinal-day) 'handle-rmn-od-on)
             ; (make-handler '(repeater-month-name scalar-year) 'handle-rmn-sy)
             ; (make-handler '(scalar-day repeater-month-name scalar-year (? separator-at) (? p time)) 'handle-sd-rmn-sy)
-            *endian-handler-1*
-            *endian-handler-2*
-            (make-handler 'date '(scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p 'time)) 'handle-sy-sm-sd)
-            (make-handler 'date '(scalar-day separator-slash-or-dash scalar-month) 'handle-sd-sm)
-            (make-handler 'date '(scalar-month separator-slash-or-dash scalar-year) 'handle-sm-sy)))
+            ; *endian-handler-1*
+            ; *endian-handler-2*
+            ; (make-handler 'date '(scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p 'time)) 'handle-sy-sm-sd)
+            ; (make-handler 'date '(scalar-day separator-slash-or-dash scalar-month) 'handle-sd-sm)
+            ; (make-handler 'date '(scalar-month separator-slash-or-dash scalar-year) 'handle-sm-sy)
+            ))
 
 (progn
       (list (make-handler 'anchor '((? grabber) repeater (? separator-at) (? repeater) (? repeater)) 'handle-r)
@@ -96,7 +96,7 @@
          for element = (car pattern*)
          for token = (or (first tokens*)
                          (if (every #'!optionalp pattern*)
-                             (return t)
+                             (return token-index)
                              (return nil)))
          for name = (if (atom element) element (first (last element)))
          for optionalp = (!optionalp element)
@@ -112,16 +112,12 @@
                    (loop named inner-loop
                       for sub-handler in sub-handlers
                       thereis (awhen (match-tokens sub-handler tokens*)
-                                (loop
-                                   repeat it
-                                   do (!next-token))
-                                t)
+                                (return (+ token-index it)))
                       finally (unless optionalp (return nil))))
          finally (if tokens*
                      (return nil)
                      (return token-index))))))
 
-;;; TODO: Do this!
 #|(defun tokens-to-span (tokens)
   (flet ((!match (class)
            (let ((handlers (find-class-handlers class)))

@@ -24,4 +24,4 @@ IST, GMT, etc.
 ** Regex (foo|bar) in SLIME
 ** Bug in test_offset of test_RepeaterFortnight.rb
 ** Fix numerizer when two numerals are already together
-
+** Handle ambiguous times (12:34, etc.)
