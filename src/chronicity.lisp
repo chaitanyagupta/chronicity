@@ -19,6 +19,7 @@
 
 (defvar *context* :future)
 (defvar *now*)
+(defvar *endian-preference* :little)
 
 (defun parse (text &key
               ((:context *context*) :future)
@@ -36,7 +37,7 @@
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))
-  (setf text (numerize text))
+  ;; FIXME: (setf text (numerize text))
   (rr-all-f text #?/['\"\.]/ "")
   (rr-all-f text #?/([\/\-\,\@])/ " \\1 ")
   (rr-all-f text #?/\btoday\b/ "this day")

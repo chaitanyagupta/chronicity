@@ -39,14 +39,14 @@
 
 (setf (gethash 'date *handlers*)
       (list (make-handler '(repeater-day-name repeater-month-name scalar-day repeater-time (? separator-slash-or-dash) time-zone scalar-year) 'handle-rdn-rmn-sd-t-tz-sy)
-            (make-handler '(repeater-month-name scalar-day scalar-year) 'handle-rmn-sd-sy) ; DONE
-            (make-handler '(repeater-month-name scalar-day scalar-year (? separator-at) (? p time)) 'handle-rmn-sd-sy) ; DONE
-            (make-handler '(repeater-month-name scalar-day (? separator-at) (? p time)) 'handle-rmn-sd) ; DONE
-            (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name scalar-day) 'handle-rmn-sd-on) ; DONE
-            (make-handler '(repeater-month-name ordinal-day (? separator-at) (? p time)) 'handle-rmn-od)
-            (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name ordinal-day) 'handle-rmn-od-on)
-            (make-handler '(repeater-month-name scalar-year) 'handle-rmn-sy)
-            (make-handler '(scalar-day repeater-month-name scalar-year (? separator-at) (? p time)) 'handle-sd-rmn-sy)
+            ; (make-handler '(repeater-month-name scalar-day scalar-year) 'handle-rmn-sd-sy)
+            ; (make-handler '(repeater-month-name scalar-day scalar-year (? separator-at) (? p time)) 'handle-rmn-sd-sy)
+            ; (make-handler '(repeater-month-name scalar-day (? separator-at) (? p time)) 'handle-rmn-sd)
+            ; (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name scalar-day) 'handle-rmn-sd-on)
+            ; (make-handler '(repeater-month-name ordinal-day (? separator-at) (? p time)) 'handle-rmn-od)
+            ; (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name ordinal-day) 'handle-rmn-od-on)
+            ; (make-handler '(repeater-month-name scalar-year) 'handle-rmn-sy)
+            ; (make-handler '(scalar-day repeater-month-name scalar-year (? separator-at) (? p time)) 'handle-sd-rmn-sy)
             *endian-handler-1*
             *endian-handler-2*
             (make-handler '(scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p 'time)) 'handle-sy-sm-sd)

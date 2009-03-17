@@ -14,7 +14,8 @@
     (awhen (scan-for-commas token) (tag it token))
     (awhen (scan-for-slash-or-dash token) (tag it token))
     (awhen (scan-for-at token) (tag it token))
-    (awhen (scan-for-in token) (tag it token))))
+    (awhen (scan-for-in token) (tag it token))
+    (awhen (scan-for-on token) (tag it token))))
 
 (defclass separator-comma (separator)
   ())
