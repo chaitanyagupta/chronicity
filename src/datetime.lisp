@@ -37,8 +37,13 @@
   (make-datetime year month day hour minute sec))
 
 (defun merge-datetime (date time)
-  (make-datetime (year-of date) (month-of date) (day-of date)
-                  (hour-of time) (minute-of time) (sec-of time)))
+  (let* ((epoch-time (make-time 0 0 0))
+         (diff-sec (local-time:timestamp-difference time epoch-time))
+         (diff-days (truncate diff-sec #.(* 24 60 60))))
+    (datetime-incr (make-datetime (year-of date) (month-of date) (day-of date)
+                                  (hour-of time) (minute-of time) (sec-of time))
+                   :day
+                   diff-days)))
 
 (defun now ()
   (local-time:now))
@@ -209,6 +214,12 @@
 (defun span- (span amount unit)
   (make-span (datetime-decr (span-start span) unit amount)
              (datetime-decr (span-end span) unit amount)))
+
+(defun span-includes-p (span datetime)
+  (if (span-end-included-p span)
+      (datetime<= (span-start span) datetime (span-end span))
+      (and (datetime<= (span-start span) datetime)
+           (datetime< datetime (span-end span)))))
 
 
 

@@ -142,5 +142,75 @@
                       (token-has-tag-p token 'separator)))
              tokens))
 
+;;; Helpers
 
+(defun get-anchor (tokens)
+  (let ((grabber (create-tag 'grabber :this))
+        (pointer :future)
+        (repeaters (get-repeaters tokens))
+        (head nil))
+    (setf tokens (remove-if #'(lambda (x)
+                                (token-has-tag-p x 'repeater))
+                            tokens))
+    (when (and (first tokens)
+               (token-has-tag-p (first tokens) 'grabber))
+      (setf grabber (find-tag 'grabber (first tokens))))
+    (setf head (pop repeaters))
+    (setf (tag-now head) *now*)
+    (let ((outer-span nil))
+      (ecase (tag-type grabber)
+        (:last (setf outer-span (r-next head :past)))
+        (:this (if (plusp (length repeaters))
+                   (setf outer-span (r-this head :none))
+                   (setf outer-span (r-this head *context*))))
+        (:next (setf outer-span (r-next head :future))))
+      (find-within repeaters outer-span pointer))))
+
+(defun get-repeaters (tokens)
+  (let ((repeaters (loop
+                      for token in tokens
+                      when (find-tag 'repeater token)
+                      collect it)))
+    (sort repeaters #'> :key #'r-width)))
+
+(defun find-within (tags span pointer)
+  (when (zerop (length tags))
+    (return-from find-within span))
+  (destructuring-bind (head &rest rest)
+      tags
+    (setf (tag-now head) (ecase pointer
+                           (:future (span-start span))
+                           (:past (span-end span))))
+    (let ((h (r-this head :none)))
+      (if (or (span-includes-p span (span-start h))
+              (span-includes-p span (span-end h)))
+          (find-within rest h pointer)
+          nil))))
+
+(defun merge-time-tokens-day (tokens date-start)
+  (let ((time (awhen tokens
+                (let ((*now* date-start))
+                  (tokens-to-span it)))))
+    (if time
+        (make-span (merge-datetime date-start (copy-time (span-start time)))
+                   (merge-datetime date-start (copy-time (span-end time))))
+        (make-span date-start (datetime-incr date-start :day)))))
+
+(defun dealias-time (tokens)
+  (let* ((time-token (find-if #'(lambda (x)
+                                  (find-tag 'repeater-time x))
+                              tokens))
+         (dp-token (find-if #'(lambda (x)
+                                         (find-tag 'repeater-day-portion x))
+                                     tokens)))
+    (when (and dp-token time-token)
+      (let ((dp-tag (find-tag 'repeater-day-portion dp-token)))
+        (case (tag-type dp-tag)
+          (:morning
+           (untag 'repeater-day-portion dp-token)
+           (tag (create-tag 'repeater-day-portion :am) dp-token))
+          ((:afternoon :evening :night)
+           (untag 'repeater-day-portion dp-token)
+           (tag (create-tag 'repeater-day-portion :pm) dp-token)))))
+    tokens))
 

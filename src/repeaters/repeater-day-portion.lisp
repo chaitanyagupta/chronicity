@@ -62,7 +62,7 @@
       repeater
     (or range (error "RANGE is not set.")) ; Isn't this redundant?
     (if current
-        (- (day-sec-of (span-end current))
-           (day-sec-of (span-start current)))
-        (- (day-sec-of (span-end range))
-           (day-sec-of (span-start range))))))
+        (- (datetime-to-universal (span-end current))
+           (datetime-to-universal (span-start current)))
+        (- (datetime-to-universal (span-end range))
+           (datetime-to-universal (span-start range))))))

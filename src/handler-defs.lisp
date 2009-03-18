@@ -4,15 +4,6 @@
 
 ;;; Date handlers
 
-(defun merge-time-tokens-day (tokens date-start)
-  (let ((time (awhen tokens
-                (let ((*now* date-start))
-                  (tokens-to-span it)))))
-    (if time
-        (make-span (merge-datetime date-start (span-start time))
-                   (merge-datetime date-start (span-end time)))
-        (make-span date-start (datetime-incr date-start :day)))))
-
 (define-handler (date handle-rmn-sd-sy)
     ((repeater-month-name scalar-day scalar-year)
      (repeater-month-name scalar-day scalar-year (? separator-at) (? p time)))
@@ -139,26 +130,8 @@
 
 ;;; Time handlers
 
-(defun dealias-time (time &optional day-portion &aux
-                     (repeater-time (first (token-tags time)))
-                     (repeater-day-portion (and day-portion (first (token-tags day-portion)))))
-  (unless (tag-now repeater-time)
-    (setf (tag-now repeater-time) *now*))
-  (let* ((tick (tag-type repeater-time))
-         (day-portion-type (and day-portion (tag-type repeater-day-portion))))
-    (when (and (tick-ambiguousp tick) repeater-day-portion)
-      (setf (tick-ambiguousp tick) nil)
-      (ecase day-portion-type
-        ((:am :morning) nil)
-        ((:pm :afternoon :evening :night)
-         (if (> (hour-of (tick-time tick)) 12)
-             (error "AMBIGUOUSP given when hour-of TIME is greater than 12.~%Time: ~A"
-                    time)
-             (datetime-incf (tick-time tick) :hour 12)))))
-    (r-next repeater-time *context*)))
-
 (define-handler (time)
     ((repeater-time (? repeater-day-portion)))
     (tokens)
-  (apply #'dealias-time tokens))
+  (get-anchor (dealias-time tokens)))
 

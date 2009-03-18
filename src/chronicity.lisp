@@ -97,12 +97,12 @@
   (setf (token-tags token) (remove tag (token-tags token))))
 
 (defmethod untag ((x class) (token token))
+  (untag (class-name x) token))
+
+(defmethod untag ((x symbol) token)
   (setf (token-tags token) (remove-if #'(lambda (tag)
                                           (typep tag x))
                                       (token-tags token))))
-
-(defmethod untag ((x symbol) token)
-  (untag (find-class x) token))
 
 (defun token-has-tag-p (token tag-name)
   (some #'(lambda (tag) (typep tag tag-name)) (token-tags token)))
