@@ -19,12 +19,22 @@
     (awhen (scan-for-units token) (tag it token))))
 
 (defun scan-for-month-names (token &aux (word (token-word token)))
-  (loop
-     for month in *months*
-     for regex = (string month)
-     when (cl-ppcre:scan (cl-ppcre:create-scanner regex :case-insensitive-mode t)
-                         word)
-     return (create-tag 'repeater-month-name month)))
+  (let ((scan-map '((#?r"^jan\.?(uary)?$" :january)
+                    (#?r"^feb\.?(ruary)?$" :february)
+                    (#?r"^mar\.?(ch)?$" :march)
+                    (#?r"^apr\.?(il)?$" :april)
+                    (#?r"^may$" :may)
+                    (#?r"^jun\.?e?$" :june)
+                    (#?r"^jul\.?y?$" :july)
+                    (#?r"^aug\.?(ust)?$" :august)
+                    (#?r"^sep\.?(t\.?|tember)?$" :september)
+                    (#?r"^oct\.?(ober)?$" :october)
+                    (#?r"^nov\.?(ember)?$" :november)
+                    (#?r"^dec\.?(ember)?$" :december))))
+    (loop
+       for (regex keyword) in scan-map
+       when (cl-ppcre:scan regex word)
+       return (create-tag 'repeater-month-name keyword))))
 
 ;;; TODO: Check for spelling mistakes
 (defun scan-for-day-names (token &aux (word (token-word token)))

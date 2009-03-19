@@ -1,7 +1,7 @@
 (cl:in-package #:cl-user)
 
 (defpackage #:chronicity-test
-  (:use #:cl #:lisp-unit)
+  (:use #:cl #:lisp-unit #:chronicity)
   (:export #:run-suite))
 
 (do-symbols (s :chronicity)

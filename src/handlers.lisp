@@ -190,13 +190,11 @@
 (defun merge-time-tokens-day (tokens date-start)
   (let ((time (awhen tokens
                 (let ((*now* date-start))
-                  (tokens-to-span it)))))
-    (if time
-        (make-span (merge-datetime date-start (copy-time (span-start time)))
-                   (merge-datetime date-start (copy-time (span-end time))))
+                  (get-anchor (dealias-and-disambiguate-time tokens))))))
+    (or time
         (make-span date-start (datetime-incr date-start :day)))))
 
-(defun dealias-time (tokens)
+(defun dealias-and-disambiguate-time (tokens)
   (let* ((time-token (find-if #'(lambda (x)
                                   (find-tag 'repeater-time x))
                               tokens))
@@ -212,5 +210,21 @@
           ((:afternoon :evening :night)
            (untag 'repeater-day-portion dp-token)
            (tag (create-tag 'repeater-day-portion :pm) dp-token)))))
+    (when *ambiguous-time-range*
+      (loop
+         with new-tokens = nil
+         for tokens* on tokens
+         for token = (first tokens*)
+         and next-token = (second tokens*)
+         for time-tag = (find-tag 'repeater-time token)
+         do (push token new-tokens)
+         if (and time-tag
+                 (tick-ambiguousp (tag-type time-tag))
+                 (or (not next-token)
+                     (not (find-tag 'repeater-day-portion next-token))))
+         do (push (create-token "disambiguator"
+                                (create-tag 'repeater-day-portion *ambiguous-time-range*))
+                  new-tokens)
+         finally (setf tokens (nreverse new-tokens))))
     tokens))
 

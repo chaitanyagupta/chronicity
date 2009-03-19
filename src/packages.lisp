@@ -2,6 +2,11 @@
 
 (defpackage #:chronicity
   (:use #:cl)
-  (:export #:parse)
+  (:export #:parse
+           #:*now*
+           #:*context*
+           #:*guess*
+           #:*ambiguous-time-range*
+           #:*endian-preference*)
   (:import-from #:cl-ppcre #:scan))
 

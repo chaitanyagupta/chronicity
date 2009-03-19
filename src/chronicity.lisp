@@ -20,12 +20,15 @@
 (defvar *context* :future)
 (defvar *now*)
 (defvar *endian-preference* :little)
+(defvar *guess* :start)
+(defvar *ambiguous-time-range* 6)
 
 (defun parse (text &key
-              ((:context *context*) :future)
-              ((:now *now*) (now))
-              guess
-              ambiguous-time-range
+              ((:context *context*) *context*)
+              ((:now *now*) (or *now* (now)))
+              (guess *guess*)
+              ((:ambiguous-time-range *ambiguous-time-range*) *ambiguous-time-range*)
+              (tokens-to-span t)
               &aux tokens)
   "The API."
   (setf text (pre-normalize text))
@@ -33,7 +36,20 @@
   (loop
      for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator) ; 'timezone
      do (scan-tokens type tokens))
-  tokens)
+  (if tokens-to-span
+      (let ((span (tokens-to-span tokens)))
+        (when span
+          (ecase guess
+            (:start (span-start span))
+            (:end (if (span-end-included-p span)
+                      (span-end span)
+                      (datetime-decr (span-end span) :sec)))
+            (:middle (universal-to-datetime
+                      (truncate (+ (datetime-to-universal (span-start span))
+                                   (datetime-to-universal (span-end span)))
+                                2)))
+            ((nil) span))))
+      tokens))
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))
@@ -53,7 +69,7 @@
   (rr-all-f text "\\b(?:in|during) the (morning)\\b" "\\1")
   (rr-all-f text "\\b(?:in the|during the|at) (afternoon|evening|night)\\b" "\\1")
   (rr-all-f text #?/\btonight\b/ "this night")
-  (rr-all-f text "(?=\\w)([ap]m|oclock)\\b" "\\1")
+  (rr-all-f text "(\\d)([ap]m|oclock)\\b" "\\1 \\2")
   (rr-all-f text "\\b(hence|after|from)\\b" "future")
   ;; TODO: (setf text (numericize-ordinals text)) 
   text)

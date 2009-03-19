@@ -23,5 +23,6 @@
              (:file "repeater-time")
              (:file "repeater-week")
              (:file "repeater-weekend")
-             (:file "repeater-year")))))
+             (:file "repeater-year")
+             (:file "parsing")))))
 
