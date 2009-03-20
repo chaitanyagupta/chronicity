@@ -72,7 +72,7 @@
                     (#?/^days?$/  :day)
                     (#?/^hours?$/  :hour)
                     (#?/^minutes?$/  :minute)
-                    (#?/^seconds?$/  :second))))
+                    (#?/^seconds?$/  :sec))))
     (loop
        for (regex keyword) in scan-map
        when (cl-ppcre:scan regex word)

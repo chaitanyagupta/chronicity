@@ -25,7 +25,9 @@
                        (start-of-day (datetime-incr now :day)))))
       (make-span day-start day-end))))
 
-;;; TODO: R-OFFSET?
+(defmethod r-offset ((repeater repeater-day) span amount pointer)
+  (let ((offset (* (if (eql pointer :future) 1 -1) amount)))
+    (span+ span offset :day)))
 
 (defmethod r-width ((repeater repeater-day))
   +day-seconds+)

@@ -52,13 +52,6 @@
 (defclass scalar-year (scalar)
   ())
 
-(defmethod initialize-instance :after ((scalar-year scalar-year) &key type &allow-other-keys)
-  (when (and (integerp type)
-             (< type 100))
-    (if (< type 70)
-        (setf (slot-value scalar-year 'type) (+ type 2000))
-        (setf (slot-value scalar-year 'type) (+ type 1900)))))
-
 (defun scan-for-scalar-years (token post-token)
   (when (and (cl-ppcre:scan #?r"^([1-9]\d)?\d\d?$" (token-word token))
              (check-post-token post-token))

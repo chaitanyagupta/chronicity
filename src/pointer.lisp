@@ -15,7 +15,7 @@
 (defun scan-for-pointers (token)
   (let ((scan-map '((#?r"\bpast\b" :past)
                     (#?r"\bfuture\b" :future)
-                    (#?r"\bin\b" :in))))
+                    (#?r"\bin\b" :future))))
     (loop
        for (regex value) in scan-map
        when (cl-ppcre:scan regex (token-word token))

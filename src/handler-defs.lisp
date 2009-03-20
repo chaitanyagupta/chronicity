@@ -141,6 +141,72 @@
     (make-span (make-date year month)
                (datetime-incr (make-date year month) :month))))
 
+;;; Anchors
+
+(define-handler (anchor handle-r)
+    (((? grabber) repeater (? separator-at) (? repeater) (? repeater))
+     ((? grabber) repeater repeater (? separator-at) (? repeater) (? repeater)))
+    (tokens)
+  (get-anchor (dealias-and-disambiguate-time tokens)))
+
+(define-handler (anchor)
+    ((repeater grabber repeater))
+    (tokens)
+  (handle-r (list (second tokens) (first tokens) (third tokens))))
+
+;;; Arrows
+
+(defun handle-srp (tokens span)
+  (let ((distance (tag-type (find-if #'(lambda (x)
+                                         (eql (type-of x) 'scalar))
+                                     (token-tags (first tokens)))))
+        (repeater (find-tag 'repeater (second tokens)))
+        (pointer (token-tag-type 'pointer (third tokens))))
+    (r-offset repeater span distance pointer)))
+
+(define-handler (arrow handle-s-r-p)
+    ((scalar repeater pointer))
+    (tokens)
+  (let ((span (parse "this second" :guess nil :now *now*)))
+    (handle-srp tokens span)))
+
+(define-handler (arrow handle-p-s-r)
+    ((pointer scalar repeater))
+    (tokens)
+  (handle-s-r-p (list (second tokens) (third tokens) (first tokens))))
+
+(define-handler (arrow)
+    ((scalar repeater pointer (? p anchor)))
+    (tokens)
+  (let ((anchor-span (awhen (nthcdr 3 tokens)
+                       (get-anchor it))))
+    (handle-srp tokens anchor-span)))
+
+;;; Narrow
+
+(defun handle-orr (tokens outer-span)
+  (let ((repeater (find-tag 'repeater (second tokens)))
+        (ordinal (token-tag-type 'ordinal (first tokens))))
+    (setf (tag-now repeater) (datetime-decr (span-start outer-span) :sec))
+    (loop
+       repeat ordinal
+       for span = (r-next repeater :future)
+       if (datetime> (span-start span) (span-end outer-span))
+       return nil
+       finally (return span))))
+
+(define-handler (narrow)
+    ((ordinal repeater separator-in repeater))
+    (tokens)
+  (let ((outer-span (get-anchor (list (fourth tokens)))))
+    (handle-orr (list (first tokens) (second tokens)) outer-span)))
+
+(define-handler (narrow)
+    ((ordinal repeater grabber repeater))
+    (tokens)
+  (let ((outer-span (get-anchor (list (third tokens) (fourth tokens)))))
+    (handle-orr tokens outer-span)))
+
 ;;; Time handlers
 
 (define-handler (time)

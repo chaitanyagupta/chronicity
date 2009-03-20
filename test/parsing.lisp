@@ -218,14 +218,14 @@
     (assert-datetime= (make-datetime 2006 10 24 12 30) (parse "this year"))
     
     (assert-datetime= (make-datetime 2006 4 24 12 30)
-                      ("this year" :context :past))
+                      (parse "this year" :context :past))
     
     ;; month
     
     (assert-datetime= (make-datetime 2006 8 24 12) (parse "this month"))
     
     (assert-datetime= (make-datetime 2006 8 8 12)
-                      ("this month" :context :past))
+                      (parse "this month" :context :past))
     
     (assert-datetime= (make-datetime 2006 12 16 12)
                       (parse "next month" :now (make-datetime 2006 11 15)))
@@ -239,21 +239,21 @@
     (assert-datetime= (make-datetime 2006 8 21 19 30) (parse "this fortnight"))
     
     (assert-datetime= (make-datetime 2006 8 14 19)
-                      ("this fortnight" :context :past))
+                      (parse "this fortnight" :context :past))
     
     ;; week
     
     (assert-datetime= (make-datetime 2006 8 18 7 30) (parse "this week"))
     
     (assert-datetime= (make-datetime 2006 8 14 19)
-                      ("this week" :context :past))
+                      (parse "this week" :context :past))
     
     ;; weekend
     
     (assert-datetime= (make-datetime 2006 8 20) (parse "this weekend"))
     
     (assert-datetime= (make-datetime 2006 8 13)
-                      ("this weekend" :context :past))
+                      (parse "this weekend" :context :past))
     
     (assert-datetime= (make-datetime 2006 8 13) (parse "last weekend"))
     
@@ -262,7 +262,7 @@
     (assert-datetime= (make-datetime 2006 8 16 19 30) (parse "this day"))
     
     (assert-datetime= (make-datetime 2006 8 16 7)
-                      ("this day" :context :past))
+                      (parse "this day" :context :past))
     
     (assert-datetime= (make-datetime 2006 8 16 19 30) (parse "today"))
     
@@ -299,7 +299,7 @@
     (assert-datetime= (make-datetime 2006 8 16 14) (parse "this second"))
     
     (assert-datetime= (make-datetime 2006 8 16 14)
-                      ("this second" :context :past))
+                      (parse "this second" :context :past))
     
     (assert-datetime= (make-datetime 2006 8 16 14 0 1) (parse "next second"))
     
@@ -319,7 +319,7 @@
     (assert-datetime= (make-datetime 2006 8 17 9) (parse "tomorrow at 0900"))
     
     (assert-datetime= (make-datetime 2006 8 15 4)
-                      ("yesterday at 4:00" :ambiguous-time-range nil))
+                      (parse "yesterday at 4:00" :ambiguous-time-range nil))
     
     (assert-datetime= (make-datetime 2006 8 11 16) (parse "last friday at 4:00"))
     
@@ -416,7 +416,7 @@
     (assert-datetime= (make-datetime 2006 8 16 14 0 20) (parse "20 seconds from now"))
     
     (assert-datetime= (make-datetime 2007 1 7 23 30)
-                      ("2 months ago" :now (make-datetime 2007 3 7 23 30)))
+                      (parse "2 months ago" :now (make-datetime 2007 3 7 23 30)))
     ))
   
 (define-test parse-guess-p-s-r
