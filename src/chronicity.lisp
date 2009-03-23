@@ -18,7 +18,7 @@
 #.(cl-interpol:enable-interpol-syntax)
 
 (defvar *context* :future)
-(defvar *now*)
+(defvar *now* nil)
 (defvar *endian-preference* :little)
 (defvar *guess* :start)
 (defvar *ambiguous-time-range* 6)
