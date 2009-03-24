@@ -22,7 +22,6 @@
     ("one hundred" 100)
     ("one hundred and fifty" 150)
     ("two-hundred" 200)
-    ("5 hundred" 500)
     ("nine hundred and ninety nine" 999)
     ("one thousand" 1000)
     ("twelve hundred" 1200)
@@ -31,7 +30,6 @@
     ("a hundred" "a 100")
     ("seventy four thousand and two" 74002)
     ("ninety nine thousand nine hundred ninety nine" 99999)
-    ("100 thousand" 100000)
     ("two hundred fifty thousand" 250000)
     ("one million" 1000000)
     ("one million two hundred fifty thousand and seven" 1250007)
@@ -40,7 +38,6 @@
     ("two foo" "2 foo")
     ("a four" "a 4")
     ("foo seven bar" "foo 7 bar")
-    ("Seventy 8" "78")
     ("seven hours before now" "7 hours before now")
     ("three hundred and sixty two days from now" "362 days from now")))
 
@@ -48,6 +45,6 @@
   (loop
      for (string result) in *numerizer-test-map*
      for result-string = (format nil "~A" result)
-     do (assert-equal result-string (numerize string)
+     do (assert-equal result-string (chronicity.numerizer:numerize string)
                       string)))
 

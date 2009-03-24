@@ -1,4 +1,10 @@
-(cl:in-package #:chronicity)
+(cl:in-package #:cl-user)
+
+(defpackage #:chronicity.numerizer
+  (:use #:cl)
+  (:export #:numerize))
+
+(in-package #:chronicity.numerizer)
 
 #.(cl-interpol:enable-interpol-syntax)
 
@@ -30,7 +36,7 @@
 (defvar *ten-prefixes*
   '(("twenty" 20)
     ("thirty" 30)
-    ("fourty" 40)
+    ("(fourty|forty)" 40)
     ("fifty" 50)
     ("sixty" 60)
     ("seventy" 70)
@@ -43,6 +49,44 @@
     ("million" 1000000)
     ("billion" 1000000000)
     ("trillion" 1000000000000)))
+
+(defun numerize (string)
+  (let ((tokens (reverse (cl-ppcre:split #?r"(\s|-)+" string))))
+    (setf tokens (remove-if-not #'numeric-token-p tokens))
+    (format nil "~A" (tokens-to-number tokens))))
+
+(defun tokens-to-number (tokens)
+  (let* ((sum 0)
+         (multiplier 1)
+         (tsum 0))
+    (loop
+       for token in tokens
+       if (big-prefix-p token)
+       do
+       (incf sum (* tsum multiplier))
+       (setf tsum 0
+             multiplier (token-numeric-value token))
+       else
+       do (incf tsum (token-numeric-value token))
+       finally (incf sum (* tsum multiplier)))
+    sum))
+
+(defun numeric-token-p (string)
+  (dolist (list (list *direct-nums* *ten-prefixes* *big-prefixes*))
+    (dolist (numeral-pair list)
+      (when (cl-ppcre:scan (first numeral-pair) string)
+        (return-from numeric-token-p t)))))
+
+(defun token-numeric-value (string)
+  (dolist (list (list *direct-nums* *ten-prefixes* *big-prefixes*))
+    (dolist (numeral-pair list)
+      (when (cl-ppcre:scan (first numeral-pair) string)
+        (return-from token-numeric-value (second numeral-pair))))))
+
+(defun big-prefix-p (string)
+  (dolist (numeral-pair *big-prefixes*)
+    (when (cl-ppcre:scan (first numeral-pair) string)
+      (return-from big-prefix-p t))))
 
 (defun numerize (string)
   ;; We'll test everything in lower case
