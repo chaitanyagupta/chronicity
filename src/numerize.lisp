@@ -30,7 +30,7 @@
     (#?r"\beight\b" 8)
     (#?r"\bnine\b" 9)
     ("ten" 10)
-    (#?r"\ba[\b^$]" 1) ; doesn't make sense for an 'a' at the end to be a 1
+    ; (#?r"\ba[\b^$]" 1) ; doesn't make sense for an 'a' at the end to be a 1
     ))
 
 (defvar *ten-prefixes*
@@ -51,9 +51,46 @@
     ("trillion" 1000000000000)))
 
 (defun numerize (string)
+  ;; Some normalization
+  (setf string (cl-ppcre:regex-replace #?r"\band\b" string ""))
+  (let ((start 0)
+        (diff 0))
+    (loop
+       (multiple-value-bind (start2 end2)
+           (and (< start (length string))
+                (detect-numeral-sequence string :start start))
+         (unless start2
+           (return))
+         (let ((number (numerize-aux (subseq string start2 end2))))
+           (when number
+             (setf (values string diff)
+                   (replace-numeral-sequence string start2 end2 number)))
+           (setf start (- end2 diff)))))
+    string))
+
+(defun replace-numeral-sequence (string start end number)
+  (let ((number-string (format nil "~A" number)))
+    (values
+     (concatenate 'string
+                  (subseq string 0 start)
+                  number-string
+                  (subseq string end))
+     (- (- end start) (length number-string)))))
+
+(defun numerize-aux (string)
   (let ((tokens (reverse (cl-ppcre:split #?r"(\s|-)+" string))))
     (setf tokens (remove-if-not #'numeric-token-p tokens))
-    (format nil "~A" (tokens-to-number tokens))))
+    (tokens-to-number tokens)))
+
+(defvar *big-detector-regex*
+  (let ((big-or (format nil "(~{~A~^|~})"
+                        (mapcar #'first (append *direct-nums*
+                                                *ten-prefixes*
+                                                *big-prefixes*)))))
+    #?r"${big-or}(\s+${big-or})*"))
+
+(defun detect-numeral-sequence (string &key (start 0))
+  (cl-ppcre:scan *big-detector-regex* string :start start))
 
 (defun tokens-to-number (tokens)
   (let* ((sum 0)
@@ -98,30 +135,6 @@
   (dolist (numeral-pair *big-prefixes*)
     (when (cl-ppcre:scan (first numeral-pair) string)
       (return-from big-prefix-p t))))
-
-(defun numerize (string)
-  ;; We'll test everything in lower case
-  (setf string (string-downcase string))
-  
-  (rr-all-f string #?r" +|([^\d])-([^d])" "\\1 \\2")
-  (rr-all-f string #?r"a half" "haAlf")
-
-  ;; Convert the direct nums from words to numerals
-  (dolist (num *direct-nums*)
-    (rr-all-f string (first num) (format nil "~A" (second num))))
-
-  ;; Convert tens to numerals
-  (dolist (num *ten-prefixes*)
-    (rr-all-f string (first num) (format nil "~A" (second num))))
-
-  ;; Hundreds, thousands, etc. to numerals
-  (dolist (num *big-prefixes*)
-    (rr-all-f string (first num) (format nil "~A" (second num))))
-
-  ;; Remove the 'and' or '&' between numerals
-  (rr-all-f string #?r"(\d)\s+(?:and|&)\s+(\d)" "\\1 \\2")
-
-  (values (combine-adjacent-numbers string)))
 
 (defun combine-adjacent-numbers (string)
   (let* ((bi-pairs (loop
