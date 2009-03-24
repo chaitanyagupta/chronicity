@@ -1,10 +1,10 @@
 (cl:in-package #:cl-user)
 
-(defpackage #:chronicity.numerizer
+(defpackage #:chronicity-numerizer
   (:use #:cl)
   (:export #:numerize))
 
-(in-package #:chronicity.numerizer)
+(in-package #:chronicity-numerizer)
 
 #.(cl-interpol:enable-interpol-syntax)
 

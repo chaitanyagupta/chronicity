@@ -45,6 +45,6 @@
   (loop
      for (string result) in *numerizer-test-map*
      for result-string = (format nil "~A" result)
-     do (assert-equal result-string (chronicity.numerizer:numerize string)
+     do (assert-equal result-string (chronicity-numerizer:numerize string)
                       string)))
 
