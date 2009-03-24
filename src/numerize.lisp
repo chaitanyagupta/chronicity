@@ -87,12 +87,14 @@
                         (mapcar #'first (append *direct-nums*
                                                 *ten-prefixes*
                                                 *big-prefixes*)))))
-    #?r"${big-or}(\s+${big-or})*"))
+    #?r"${big-or}((\s|-)+${big-or})*"))
 
 (defun detect-numeral-sequence (string &key (start 0))
   (cl-ppcre:scan *big-detector-regex* string :start start))
 
 (defun tokens-to-number (tokens)
+  (when (big-prefix-p (first (last tokens)))
+    (setf tokens (append tokens (list "one"))))
   (let* ((sum 0)
          (multiplier 1)
          (tsum 0)
