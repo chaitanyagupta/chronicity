@@ -36,6 +36,7 @@
   (loop
      for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator) ; 'timezone
      do (scan-tokens type tokens))
+  ;; Guess date
   (if tokens-to-span
       (let ((span (tokens-to-span tokens)))
         (when span
@@ -102,6 +103,13 @@
    (now :initarg :now
         :accessor tag-now
         :initform nil)))
+
+(defmethod print-object ((x tag) stream)
+  (print-unreadable-object (x stream :type t)
+    (when (slot-boundp x 'type)
+      (princ (tag-type x) stream))
+    (when (tag-now x)
+      (format stream " ~A" (tag-now x)))))
 
 (defun create-tag (class type &key now)
   (make-instance class :type type :now now))

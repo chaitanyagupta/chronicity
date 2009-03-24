@@ -12,7 +12,7 @@
 (defun handler-fn (handler)
   (third handler))
 
-(defparameter *handlers* nil)
+(defvar *handlers* nil)
 (defvar *handler-patterns*)
 
 (defun clear-handlers ()
@@ -40,42 +40,7 @@
                      collect (make-handler class pattern fn))))
     (setf *handlers* (nconc *handlers* handlers))))
 
-(progn
-      (list ; (make-handler 'time '(repeater-time (? repeater-day-portion)) nil)
-            ))
-
-(progn
-      (list (make-handler 'date '(repeater-day-name repeater-month-name scalar-day repeater-time (? separator-slash-or-dash) time-zone scalar-year) 'handle-rdn-rmn-sd-t-tz-sy)
-            ; (make-handler '(repeater-month-name scalar-day scalar-year) 'handle-rmn-sd-sy)
-            ; (make-handler '(repeater-month-name scalar-day scalar-year (? separator-at) (? p time)) 'handle-rmn-sd-sy)
-            ; (make-handler '(repeater-month-name scalar-day (? separator-at) (? p time)) 'handle-rmn-sd)
-            ; (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name scalar-day) 'handle-rmn-sd-on)
-            ; (make-handler '(repeater-month-name ordinal-day (? separator-at) (? p time)) 'handle-rmn-od)
-            ; (make-handler '(repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name ordinal-day) 'handle-rmn-od-on)
-            ; (make-handler '(repeater-month-name scalar-year) 'handle-rmn-sy)
-            ; (make-handler '(scalar-day repeater-month-name scalar-year (? separator-at) (? p time)) 'handle-sd-rmn-sy)
-            ; *endian-handler-1*
-            ; *endian-handler-2*
-            ; (make-handler 'date '(scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p 'time)) 'handle-sy-sm-sd)
-            ; (make-handler 'date '(scalar-day separator-slash-or-dash scalar-month) 'handle-sd-sm)
-            ; (make-handler 'date '(scalar-month separator-slash-or-dash scalar-year) 'handle-sm-sy)
-            ))
-
-(progn
-      (list (make-handler 'anchor '((? grabber) repeater (? separator-at) (? repeater) (? repeater)) 'handle-r)
-            (make-handler 'anchor '((? grabber) repeater repeater (? separator-at) (? repeater) (? repeater)) 'handle-r)
-            (make-handler 'anchor '(repeater grabber repeater) 'handle-r-g-r)))
-
-(progn
-      (list (make-handler 'arrow '(scalar repeater pointer) 'handle-s-r-p)
-            (make-handler 'arrow '(pointer scalar repeater) 'handle-p-s-r)
-            (make-handler 'arrow '(scalar repeater pointer (? p 'anchor)) 'handle-s-r-p-a)))
-
-(progn
-      (list (make-handler 'narrow '(ordinal repeater separator-in repeater) 'handle-o-r-s-r)
-            (make-handler 'narrow '(ordinal repeater grabber repeater) 'handle-o-r-g-r)))
-
-;;; TODO: Remove the unwanted tokens
+;;; Token matcher
 
 (defvar *handler* nil
   "Current handler -- The one which matched the token.")
@@ -118,23 +83,28 @@
                      (return nil)
                      (return token-index))))))
 
-#|(defun tokens-to-span (tokens)
-  (flet ((!match (class)
+(defun tokens-to-span (tokens)
+  (flet ((!match (class tokens)
            (let ((handlers (find-class-handlers class)))
              (dolist (handler handlers)
-               (awhen (match-tokens handler tokens)
-                 (return-from tokens-to-span (funcall it tokens)))))))
-    (!match 'date)
-    (!match 'anchor)
-    (!match 'arrow)
-    (!match 'marrow)
-    (!match 'time)))|#
-
-(defun tokens-to-span (tokens)
-  (dolist (handler *handlers* nil)
-    (when (match-tokens handler tokens)
-      (let ((*handler* handler))
-        (return-from tokens-to-span (funcall (handler-fn handler) tokens))))))
+               (when (match-tokens handler tokens)
+                 (let ((*handler* handler))
+                   (return-from tokens-to-span (funcall (handler-fn handler) tokens))))))))
+    (!match 'date (remove-if #'(lambda (x)
+                                 (and (find-tag 'separator x)
+                                      (not (find-tag 'separator-slash-or-dash x))))
+                             tokens))
+    (!match 'anchor (remove-if #'(lambda (x)
+                                   (and (find-tag 'separator x)
+                                        (not (find-tag 'separator-in x))))
+                               tokens))
+    (!match 'arrow (remove-if #'(lambda (x)
+                                  (or (find-tag 'separator-at x)
+                                      (find-tag 'separator-slash-or-dash x)
+                                      (find-tag 'separator-comma x)))
+                              tokens))
+    (!match 'narrow tokens)
+    (!match 'time tokens)))
 
 (defun remove-separators (tokens)
   (remove-if #'(lambda (token)
@@ -211,20 +181,12 @@
            (untag 'repeater-day-portion dp-token)
            (tag (create-tag 'repeater-day-portion :pm) dp-token)))))
     (when *ambiguous-time-range*
-      (loop
-         with new-tokens = nil
-         for tokens* on tokens
-         for token = (first tokens*)
-         and next-token = (second tokens*)
-         for time-tag = (find-tag 'repeater-time token)
-         do (push token new-tokens)
-         if (and time-tag
-                 (tick-ambiguousp (tag-type time-tag))
-                 (or (not next-token)
-                     (not (find-tag 'repeater-day-portion next-token))))
-         do (push (create-token "disambiguator"
-                                (create-tag 'repeater-day-portion *ambiguous-time-range*))
-                  new-tokens)
-         finally (setf tokens (nreverse new-tokens))))
+      (let ((time-tag (and time-token (find-tag 'repeater-time time-token))))
+        (when (and time-tag
+                   (tick-ambiguousp (tag-type time-tag))
+                   (not dp-token))
+          (push (create-token "disambiguator"
+                              (create-tag 'repeater-day-portion *ambiguous-time-range*))
+                tokens))))
     tokens))
 

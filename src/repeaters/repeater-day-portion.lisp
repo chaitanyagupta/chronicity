@@ -55,7 +55,12 @@
     (let ((start (merge-datetime now (span-start range))))
       (setf current (make-span start (merge-datetime start (span-end range)))))))
 
-;;; TODO: R-OFFSET?
+(defmethod r-offset ((repeater repeater-day-portion) span amount pointer)
+  (setf (tag-now repeater) (span-start span))
+  (let* ((portion-span (r-next repeater pointer))
+         (direction (if (eql pointer :future) 1 -1))
+         (offset (* direction (1- amount))))
+    (span+ portion-span offset :day)))
 
 (defmethod r-width ((repeater repeater-day-portion))
   (with-slots (range current now)

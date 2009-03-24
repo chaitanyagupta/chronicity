@@ -148,7 +148,9 @@
     (assert-datetime= (make-datetime 2040 5 27 12) (parse "may 27 40"))))
   
 (define-test parse-guess-r
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
+    
     (assert-datetime= (make-datetime 2006 8 18 12) (parse "friday"))
     
     (assert-datetime= (make-datetime 2006 8 22 12) (parse "tue"))
@@ -212,12 +214,13 @@
     ))
   
 (define-test parse-guess-gr
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
     ;; year
     
-    (assert-datetime= (make-datetime 2006 10 24 12 30) (parse "this year"))
+    (assert-datetime= (make-datetime 2006 10 24 12) (parse "this year"))
     
-    (assert-datetime= (make-datetime 2006 4 24 12 30)
+    (assert-datetime= (make-datetime 2006 4 24 12)
                       (parse "this year" :context :past))
     
     ;; month
@@ -307,7 +310,9 @@
     ))
   
 (define-test parse-guess-grr
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
+    
     (assert-datetime= (make-datetime 2006 8 15 16) (parse "yesterday at 4:00"))
     
     (assert-datetime= (make-datetime 2006 8 16 9) (parse "today at 9:00"))
@@ -356,14 +361,16 @@
     ))
   
 (define-test parse-guess-rgr
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
     (assert-datetime= (make-datetime 2006 8 15 15) (parse "afternoon yesterday"))
     
     (assert-datetime= (make-datetime 2006 8 8 12) (parse "tuesday last week"))
     ))
   
 (define-test parse-guess-s-r-p
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
     ;; past
     
     (assert-datetime= (make-datetime 2003 8 16 14) (parse "3 years ago"))
@@ -425,7 +432,8 @@
     ))
   
 (define-test parse-guess-s-r-p-a
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
     ;; past
     
     (assert-datetime= (make-datetime 2003 8 17 12) (parse "3 years ago tomorrow"))
@@ -442,7 +450,8 @@
     ))
   
 (define-test parse-guess-o-r-s-r
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
     (assert-datetime= (make-datetime 2006 11 15 12) (parse "3rd wednesday in november"))
     
     (assert-equal nil (parse "10th wednesday in november"))
@@ -452,8 +461,9 @@
     ))
   
 (define-test parse-guess-o-r-g-r
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
-    (assert-datetime= (make-datetime 2007 3 16 12 30) (parse "3rd month next year"))
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* :middle))
+    (assert-datetime= (make-datetime 2007 3 16 12) (parse "3rd month next year"))
     
     (assert-datetime= (make-datetime 2006 9 21 12) (parse "3rd thursday this september"))
     

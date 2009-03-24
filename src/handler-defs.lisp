@@ -162,7 +162,8 @@
                                      (token-tags (first tokens)))))
         (repeater (find-tag 'repeater (second tokens)))
         (pointer (token-tag-type 'pointer (third tokens))))
-    (r-offset repeater span distance pointer)))
+    (when (and repeater span)
+      (r-offset repeater span distance pointer))))
 
 (define-handler (arrow handle-s-r-p)
     ((scalar repeater pointer))

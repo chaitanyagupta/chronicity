@@ -38,12 +38,20 @@
 
 ;;; TODO: Check for spelling mistakes
 (defun scan-for-day-names (token &aux (word (token-word token)))
-  (loop
-     for day in *days-of-week*
-     for regex = (string day)
-     when (cl-ppcre:scan (cl-ppcre:create-scanner regex :case-insensitive-mode t)
-                         word)
-     return (create-tag 'repeater-day-name day)))
+  (let ((scan-map '((#?r"m[ou]n(day)?$" :monday)
+                    (#?r"t(ue|eu|oo|u|)s(day)?$" :tuesday)
+                    (#?r"tue$" :tuesday)
+                    (#?r"we(dnes|nds|nns)day$" :wednesday)
+                    (#?r"wed$" :wednesday)
+                    (#?r"th(urs|ers)day$" :thursday)
+                    (#?r"thu$" :thursday)
+                    (#?r"fr[iy](day)?$" :friday)
+                    (#?r"sat(t?[ue]rday)?$" :saturday)
+                    (#?r"su[nm](day)?$" :sunday))))
+ (loop
+    for (regex keyword) in scan-map
+     when (cl-ppcre:scan regex word)
+     return (create-tag 'repeater-day-name keyword))))
 
 (defun scan-for-day-portions (token &aux (word (token-word token)))
   (let ((scan-map '(("^ams?$" :am)
