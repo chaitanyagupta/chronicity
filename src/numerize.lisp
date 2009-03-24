@@ -52,7 +52,7 @@
 
 (defun numerize (string)
   ;; Some normalization
-  (setf string (cl-ppcre:regex-replace #?r"\band\b" string ""))
+  (setf string (cl-ppcre:regex-replace-all #?r"\band\b" string ""))
   (let ((start 0)
         (diff 0))
     (loop
