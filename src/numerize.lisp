@@ -58,17 +58,28 @@
 (defun tokens-to-number (tokens)
   (let* ((sum 0)
          (multiplier 1)
-         (tsum 0))
+         (tsum 0)
+         (tokens* tokens))
     (loop
-       for token in tokens
-       if (big-prefix-p token)
-       do
-       (incf sum (* tsum multiplier))
-       (setf tsum 0
-             multiplier (token-numeric-value token))
-       else
-       do (incf tsum (token-numeric-value token))
-       finally (incf sum (* tsum multiplier)))
+       (unless tokens* (return))
+       (let ((token (first tokens*)))
+         (cond
+           ((and (big-prefix-p token)
+                 (> (token-numeric-value token) multiplier))
+            (incf sum (* tsum multiplier))
+            (setf tsum 0
+                  multiplier (token-numeric-value token)))
+           ((big-prefix-p token)
+            (let ((next-big-multiplier (or (position-if #'(lambda (x)
+                                                            (> (token-numeric-value x) multiplier))
+                                                        tokens*)
+                                           (length tokens*))))
+              (let ((new-sum (tokens-to-number (subseq tokens* 0 next-big-multiplier))))
+                (incf tsum new-sum)
+                (setf tokens* (nthcdr (1- next-big-multiplier) tokens*)))))
+           (t (incf tsum (token-numeric-value token)))))
+       (setf tokens* (cdr tokens*)))
+    (incf sum (* tsum multiplier))
     sum))
 
 (defun numeric-token-p (string)
