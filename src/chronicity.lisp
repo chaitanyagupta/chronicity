@@ -54,7 +54,7 @@
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))
-  ;; FIXME: (setf text (numerize text))
+  (setf text (chronicity-numerizer:numerize text))
   (rr-all-f text #?/['\"\.]/ "")
   (rr-all-f text #?/([\/\-\,\@])/ " \\1 ")
   (rr-all-f text #?/\btoday\b/ "this day")
