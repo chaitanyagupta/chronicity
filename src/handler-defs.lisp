@@ -110,8 +110,8 @@
       (ecase *endian-preference*
         (:little (list (token-tag-type 'scalar-day (first tokens))
                        (token-tag-type 'scalar-month (second tokens))))
-        (:middle (list (token-tag-type 'scalar-month (second tokens))
-                       (token-tag-type 'scalar-day (first tokens)))))
+        (:middle (list (token-tag-type 'scalar-day (second tokens))
+                       (token-tag-type 'scalar-month (first tokens)))))
     (let ((year (if (and (fourth original-tokens)
                          (find-tag 'separator-slash-or-dash (fourth original-tokens)))
                     (token-tag-type 'scalar-year (third tokens))
@@ -198,8 +198,11 @@
 
 (define-handler (narrow)
     (tokens)
-    ((ordinal repeater separator-in repeater))
-  (let ((outer-span (get-anchor (list (fourth tokens)))))
+    ((ordinal repeater separator-in scalar-year)
+     (ordinal repeater separator-in repeater))
+  (let ((outer-span (aif (token-tag-type 'scalar-year (fourth tokens))
+                         (make-span (make-date it) (make-date (1+ it)))
+                         (get-anchor (list (fourth tokens))))))
     (handle-orr (list (first tokens) (second tokens)) outer-span)))
 
 (define-handler (narrow)

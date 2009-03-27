@@ -138,7 +138,8 @@
            (token-tags token)))
 
 (defun token-tag-type (tag-name token)
-  (tag-type (find-tag tag-name token)))
+  (awhen (find-tag tag-name token)
+    (tag-type it)))
 
 ;;; Generic token scanner
 

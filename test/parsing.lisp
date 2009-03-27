@@ -455,10 +455,8 @@
     (assert-datetime= (make-datetime 2006 11 15 12) (parse "3rd wednesday in november"))
     
     (assert-equal nil (parse "10th wednesday in november"))
-    
-    ;; time = parse_now("3rd wednesday in 2007")
-    ;; assert_equal Time.local(2007, 1, 20, 12), time
-    ))
+
+    (assert-datetime= (make-datetime 2007 1 17 12) (parse "3rd wednesday in 2007"))))
   
 (define-test parse-guess-o-r-g-r
   (let ((*now* (make-datetime 2006 8 16 14 0 0))
@@ -467,51 +465,47 @@
     
     (assert-datetime= (make-datetime 2006 9 21 12) (parse "3rd thursday this september"))
     
-    (assert-datetime= (make-datetime 2006 8 9 12) (parse "4th day last week"))
-    ))
+    (assert-datetime= (make-datetime 2006 8 9 12) (parse "4th day last week"))))
   
 (define-test parse-guess-nonsense
   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
     (assert-equal nil (parse "some stupid nonsense"))
     
-    (assert-equal nil (parse "Ham Sandwich"))
+    (assert-equal nil (parse "Ham Sandwich"))))
+  
+(define-test parse-span
+  (let ((*now* (make-datetime 2006 8 16 14 0 0))
+        (*guess* nil))
+
+    (let ((span (parse "friday")))
+      (assert-datetime= (make-date 2006 8 18) (span-start span))
+      (assert-datetime= (make-date 2006 8 19) (span-end span)))
+
+    (let ((span (parse "november")))
+      (assert-datetime= (make-date 2006 11) (span-start span))
+      (assert-datetime= (make-date 2006 12) (span-end span)))
+
+    (let ((span (parse "weekend")))
+      (assert-datetime= (make-date 2006 8 19) (span-start span))
+      (assert-datetime= (make-date 2006 8 21) (span-end span)))))
+
+(define-test parse-with-endian-precedence
+  (let ((date-string "11/2/2007")
+        (expect-little-endian (make-datetime 2007 2 11))
+        (expect-middle-endian (make-datetime 2007 11 2)))
+    ;; Default: little endian
+    (assert-datetime= expect-little-endian (parse date-string))
+
+    (assert-datetime= expect-little-endian (parse date-string :endian-preference :little))
+
+    (assert-datetime= expect-middle-endian (parse date-string :endian-preference :middle))))
+  
+(define-test parse-words
+  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+    (assert-datetime= (parse "33 days from now") (parse "thirty-three days from now"))
+    (assert-datetime= (parse "2867532 seconds from now") (parse "two million eight hundred and sixty seven thousand five hundred and thirty two seconds from now"))
+    ;; assert_equal parse_now("may 10th"), parse_now("may tenth")
     ))
-  
-;; (define-test parse-span
-;;   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
-;;     span = parse_now("friday", :guess => false)
-;;     assert_equal Time.local(2006, 8, 18), span.begin
-;;     assert_equal Time.local(2006, 8, 19), span.end
-    
-;;     span = parse_now("november", :guess => false)
-;;     assert_equal Time.local(2006, 11), span.begin
-;;     assert_equal Time.local(2006, 12), span.end
-    
-;;     span = Chronic.parse("weekend" , :now => @time_2006_08_16_14_00_00, :guess => false)
-;;     assert_equal Time.local(2006, 8, 19), span.begin
-;;     assert_equal Time.local(2006, 8, 21), span.end
-;;     ))
-  
-;;;   def test_parse_with_endian_precedence
-;;;     date = '11/02/2007'
-
-;;;     expect_for_middle_endian = Time.local(2007, 11, 2, 12)
-;;;     expect_for_little_endian = Time.local(2007, 2, 11, 12)
-
-;;;     ;; default precedence should be toward middle endianness
-;;;     assert_equal expect_for_middle_endian, Chronic.parse(date)
-
-;;;     assert_equal expect_for_middle_endian, Chronic.parse(date, :endian_precedence => [:middle, :little])
-
-;;;     assert_equal expect_for_little_endian, Chronic.parse(date, :endian_precedence => [:little, :middle])
-;;;   end
-
-;; (define-test parse-words
-;;   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
-;;     assert_equal parse_now("33 days from now"), parse_now("thirty-three days from now")
-;;     assert_equal parse_now("2867532 seconds from now"), parse_now("two million eight hundred and sixty seven thousand five hundred and thirty two seconds from now")
-;;     assert_equal parse_now("may 10th"), parse_now("may tenth")
-;;     ))
   
 ;; (define-test parse-only-complete-pointers
 ;;   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
@@ -520,11 +514,10 @@
 ;;     assert_equal parse_now("meeting today at 2pm"), @time_2006_08_16_14_00_00
 ;;     ))
   
-;; (define-test am-pm
-;;   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
-;;     assert_equal Time.local(2006, 8, 16), parse_now("8/16/2006 at 12am")
-;;     assert_equal Time.local(2006, 8, 16, 12), parse_now("8/16/2006 at 12pm")
-;;     ))
+(define-test am-pm
+  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+    (assert-datetime= (make-date 2006 8 16) (parse "8/16/2006 at 12am"))
+    (assert-datetime= (make-datetime 2006 8 16 12) (parse "8/16/2006 at 12pm"))))
   
 ;; (define-test a-p
 ;;   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
