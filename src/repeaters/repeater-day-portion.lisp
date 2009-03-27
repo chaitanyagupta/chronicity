@@ -1,3 +1,8 @@
+;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
+;;; repeater-day-portion.lisp
+
+;;; See the LICENSE file for licensing information.
+
 (cl:in-package #:chronicity)
 
 (defparameter *morning* (make-span (make-time 6) (make-time 12)))

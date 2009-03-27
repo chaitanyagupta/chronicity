@@ -1,4 +1,7 @@
 ;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
+;;; chronicity.asd
+
+;;; See the LICENSE file for licensing information.
 
 (cl:defpackage #:chronicity-system
   (:use #:cl #:asdf))

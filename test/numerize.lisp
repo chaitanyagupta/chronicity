@@ -1,3 +1,8 @@
+;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
+;;; numerize.lisp
+
+;;; See the LICENSE file for licensing information.
+
 (in-package #:chronicity-test)
 
 ;;; Numerizer tests

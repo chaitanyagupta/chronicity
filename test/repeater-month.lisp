@@ -1,3 +1,8 @@
+;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
+;;; repeater-month.lisp
+
+;;; See the LICENSE file for licensing information.
+
 (cl:in-package #:chronicity-test)
 
 (define-test repeater-month-offset

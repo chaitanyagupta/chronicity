@@ -1,3 +1,8 @@
+;;; -*- Mode: LISP; Syntax: COMMON-LISP; Package: CL-USER; Base: 10 -*-
+;;; datetime.lisp
+
+;;; See the LICENSE file for licensing information.
+
 (cl:in-package #:chronicity)
 
 ;;; Date and Time constructors
