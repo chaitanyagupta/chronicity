@@ -5,9 +5,9 @@
 ;;; Date handlers
 
 (define-handler (date handle-rmn-sd-sy)
+    (tokens)
     ((repeater-month-name scalar-day scalar-year)
      (repeater-month-name scalar-day scalar-year (? separator-at) (? p time)))
-    (tokens)
   (setf tokens (remove-separators tokens))
   (let* ((year-tag (find-tag 'scalar-year (third tokens)))
          (month-name-tag (find-tag 'repeater-month-name (first tokens)))
@@ -26,8 +26,8 @@
       (:past (if (datetime> this-year-date today) (1- this-year) this-year)))))
 
 (define-handler (date handle-rmn-sd)
-    ((repeater-month-name scalar-day (? separator-at) (? p time)))
     (tokens)
+    ((repeater-month-name scalar-day (? separator-at) (? p time)))
   (setf tokens (remove-separators tokens))
   (let* ((month-name-tag (find-tag 'repeater-month-name (first tokens)))
          (day-tag (find-tag 'scalar-day (second tokens)))
@@ -38,8 +38,8 @@
     (merge-time-tokens-day (nthcdr 2 tokens) date-start)))
 
 (define-handler (date)
-    ((repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name scalar-day))
     (tokens)
+    ((repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name scalar-day))
   (setf tokens (remove-separators tokens))
   (cond
     ((= (length tokens) 3)
@@ -50,16 +50,16 @@
      (error "Wrong number of tokens passed to HANDLE-RMN-SD-ON.~%Tokens:~%~S" tokens))))
 
 (define-handler (date handle-rmn-od)
-    ((repeater-month-name ordinal-day (? separator-at) (? p time)))
     (tokens)
+    ((repeater-month-name ordinal-day (? separator-at) (? p time)))
   (let* ((day-token (second tokens))
          (day (token-tag-type 'ordinal-day day-token)))
     (tag (create-tag 'scalar-day day) day-token)
     (handle-rmn-sd (list* (first tokens) day-token (nthcdr 2 tokens)))))
 
 (define-handler (date)
-    ((repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name ordinal-day))
     (tokens)
+    ((repeater-time (? repeater-day-portion) (? separator-on) repeater-month-name ordinal-day))
   (setf tokens (remove-separators tokens))
   (cond
     ((= (length tokens) 3)
@@ -70,8 +70,8 @@
      (error "Wrong number of tokens passed to HANDLE-RMN-OD-ON.~%Tokens:~%~S" tokens))))
 
 (define-handler (date)
-    ((repeater-month-name scalar-year))
     (tokens)
+    ((repeater-month-name scalar-year))
   (let* ((month-name (token-tag-type 'repeater-month-name (first tokens)))
          (month (month-index month-name))
          (year (token-tag-type 'scalar-year (second tokens)))
@@ -79,21 +79,21 @@
     (make-span start (datetime-incr start :month))))
 
 (define-handler (date)
-    ((scalar-day repeater-month-name scalar-year (? separator-at) (? p time)))
     (tokens)
+    ((scalar-day repeater-month-name scalar-year (? separator-at) (? p time)))
   (handle-rmn-sd-sy (list* (second tokens) (first tokens) (nthcdr 2 tokens))))
 
 (define-handler (date)
-    ((ordinal-day repeater-month-name scalar-year (? separator-at) (? p time)))
     (tokens)
+    ((ordinal-day repeater-month-name scalar-year (? separator-at) (? p time)))
   (let* ((day-token (first tokens))
          (day (token-tag-type 'ordinal-day day-token)))
     (tag (create-tag 'scalar-day day) day-token)
     (handle-rmn-sd-sy (list* (second tokens) day-token (nthcdr 2 tokens)))))
 
 (define-handler (date)
-    ((scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p time)))
     (tokens)
+    ((scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p time)))
   (setf tokens (remove-separators tokens))
   (let* ((year (token-tag-type 'scalar-year (first tokens)))
          (month (token-tag-type 'scalar-month (second tokens)))
@@ -102,9 +102,9 @@
     (merge-time-tokens-day (nthcdr 3 tokens) date-start)))
 
 (define-handler (date handle-ambiguous-dmy)
+    (original-tokens &aux tokens)
     ((scalar-month separator-slash-or-dash scalar-month separator-slash-or-dash scalar-year (? separator-at) (? p time))
      (scalar-month separator-slash-or-dash scalar-month (? separator-at) (? p time)))
-    (original-tokens &aux tokens)
   (setf tokens (remove-separators original-tokens))
   (destructuring-bind (day month)
       (ecase *endian-preference*
@@ -119,11 +119,11 @@
       (merge-time-tokens-day (nthcdr 3 tokens) (make-date year month day)))))
 
 (define-handler (date)
+    (tokens)
     ((scalar-day separator-slash-or-dash scalar-month separator-slash-or-dash scalar-year (? separator-at) (? p time))
      (scalar-day separator-slash-or-dash scalar-month (? separator-at) (? p time))
      (scalar-month separator-slash-or-dash scalar-day separator-slash-or-dash scalar-year (? separator-at) (? p time))
      (scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p time)))
-    (tokens)
   (let ((selected-pattern (handler-pattern *handler*)))
     (if (or (equalp selected-pattern (first *handler-patterns*))
             (equalp selected-pattern (second *handler-patterns*)))
@@ -133,8 +133,8 @@
           (handle-ambiguous-dmy tokens)))))
 
 (define-handler (date)
-    ((scalar-month separator-slash-or-dash scalar-year))
     (tokens)
+    ((scalar-month separator-slash-or-dash scalar-year))
   (setf tokens (remove-separators tokens))
   (let ((month (token-tag-type 'scalar-month (first tokens)))
         (year (token-tag-type 'scalar-year (second tokens))))
@@ -144,14 +144,14 @@
 ;;; Anchors
 
 (define-handler (anchor handle-r)
+    (tokens)
     (((? grabber) repeater (? separator-at) (? repeater) (? repeater))
      ((? grabber) repeater repeater (? separator-at) (? repeater) (? repeater)))
-    (tokens)
   (get-anchor (dealias-and-disambiguate-time tokens)))
 
 (define-handler (anchor)
-    ((repeater grabber repeater))
     (tokens)
+    ((repeater grabber repeater))
   (handle-r (list (second tokens) (first tokens) (third tokens))))
 
 ;;; Arrows
@@ -166,19 +166,19 @@
       (r-offset repeater span distance pointer))))
 
 (define-handler (arrow handle-s-r-p)
-    ((scalar repeater pointer))
     (tokens)
+    ((scalar repeater pointer))
   (let ((span (parse "this second" :guess nil :now *now*)))
     (handle-srp tokens span)))
 
 (define-handler (arrow handle-p-s-r)
-    ((pointer scalar repeater))
     (tokens)
+    ((pointer scalar repeater))
   (handle-s-r-p (list (second tokens) (third tokens) (first tokens))))
 
 (define-handler (arrow)
-    ((scalar repeater pointer (? p anchor)))
     (tokens)
+    ((scalar repeater pointer (? p anchor)))
   (let ((anchor-span (awhen (nthcdr 3 tokens)
                        (get-anchor it))))
     (handle-srp tokens anchor-span)))
@@ -197,21 +197,21 @@
        finally (return span))))
 
 (define-handler (narrow)
-    ((ordinal repeater separator-in repeater))
     (tokens)
+    ((ordinal repeater separator-in repeater))
   (let ((outer-span (get-anchor (list (fourth tokens)))))
     (handle-orr (list (first tokens) (second tokens)) outer-span)))
 
 (define-handler (narrow)
-    ((ordinal repeater grabber repeater))
     (tokens)
+    ((ordinal repeater grabber repeater))
   (let ((outer-span (get-anchor (list (third tokens) (fourth tokens)))))
     (handle-orr tokens outer-span)))
 
 ;;; Time handlers
 
 (define-handler (time)
-    ((repeater-time (? repeater-day-portion)))
     (tokens)
+    ((repeater-time (? repeater-day-portion)))
   (get-anchor (dealias-and-disambiguate-time tokens)))
 

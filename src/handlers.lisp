@@ -26,7 +26,7 @@
     (intern (format nil "HANDLE-~A" (incf *gensym-counter*)) :chronicity)))
 
 (defmacro define-handler ((class &optional (name (make-handler-name)))
-                          patterns &optional lambda-list
+                          lambda-list patterns
                           &body body)
   `(progn
      (defun ,name ,lambda-list
