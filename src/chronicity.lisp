@@ -28,6 +28,7 @@
               ((:now *now*) (or *now* (now)))
               (guess *guess*)
               ((:ambiguous-time-range *ambiguous-time-range*) *ambiguous-time-range*)
+              ((:endian-preference *endian-preference*) *endian-preference*)
               (tokens-to-span t)
               &aux tokens)
   "The API."
