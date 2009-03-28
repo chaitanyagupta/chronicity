@@ -44,29 +44,33 @@
               (guess *guess*)
               ((:ambiguous-time-range *ambiguous-time-range*) *ambiguous-time-range*)
               ((:endian-preference *endian-preference*) *endian-preference*)
-              (tokens-to-span t)
               &aux tokens)
-  "The API."
+  "Parse the string in TEXT and return either a DATETIME or a SPAN
+  object. Also returns a list of tokens as the second value.
+
+CONTEXT (default *CONTEXT*) can be either :PAST or :FUTURE.
+
+NOW (default *NOW* or this instant) should be a DATETIME instance,
+relative to which the date/time will be calculated.
+
+GUESS (default *GUESS*) if NIL, PARSE returns a SPAN object, otherwise
+returns the start, end or middle of the span if the it is :START, :END
+or :MIDDLE respectively.
+
+For AMBIGUOUS-TIME-RANGE (default *AMBIGUOUS-TIME-RANGE*), if an
+integer is given, ambiguous times (like 5:00) will be assumed to be
+within the range of that time in the AM to that time in the PM. For
+example, if you set it to 7, then the parser will look for the time
+between 7am and 7pm. In the case of 5:00, it would assume that means
+5:00pm. If NIL is given, no assumption will be made, and the first
+matching instance of that time will be used."
   (setf text (pre-normalize text))
   (setf tokens (tokenize text))
   (loop
      for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator) ; 'timezone
      do (scan-tokens type tokens))
   ;; Guess date
-  (if tokens-to-span
-      (let ((span (tokens-to-span tokens)))
-        (when span
-          (ecase guess
-            (:start (span-start span))
-            (:end (if (span-end-included-p span)
-                      (span-end span)
-                      (datetime-decr (span-end span) :sec)))
-            (:middle (universal-to-datetime
-                      (truncate (+ (datetime-to-universal (span-start span))
-                                   (datetime-to-universal (span-end span)))
-                                2)))
-            ((nil) span))))
-      tokens))
+  (values (guess-span (tokens-to-span tokens) guess) tokens))
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))
@@ -94,6 +98,19 @@
 (defun tokenize (text)
   (mapcar #'create-token
           (cl-ppcre:split #?r"\s+" text)))
+
+(defun guess-span (span guess)
+  (when span
+    (ecase guess
+      (:start (span-start span))
+      (:end (if (span-end-included-p span)
+                (span-end span)
+                (datetime-decr (span-end span) :sec)))
+      (:middle (universal-to-datetime
+                (truncate (+ (datetime-to-universal (span-start span))
+                             (datetime-to-universal (span-end span)))
+                          2)))
+      ((nil) span))))
 
 (defclass token ()
   ((word :initarg :word
