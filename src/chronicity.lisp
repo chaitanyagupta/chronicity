@@ -22,11 +22,21 @@
 
 #.(cl-interpol:enable-interpol-syntax)
 
-(defvar *context* :future)
-(defvar *now* nil)
-(defvar *endian-preference* :little)
-(defvar *guess* :start)
-(defvar *ambiguous-time-range* 6)
+(defvar *context* :future
+  "The default value for :CONTEXT.")
+
+(defvar *now* nil
+  "The default value for :NOW. If NIL, :NOW is assumed to be this
+  instant.")
+
+(defvar *endian-preference* :little
+  "The default value for :ENDIAN-PREFERENCE.")
+
+(defvar *guess* :start
+  "The default value for :GUESS.")
+
+(defvar *ambiguous-time-range* 6
+  "The default value for :AMBIGUOUS-TIME-RANGE.")
 
 (defun parse (text &key
               ((:context *context*) *context*)

@@ -12,6 +12,22 @@
            #:*context*
            #:*guess*
            #:*ambiguous-time-range*
-           #:*endian-preference*)
+           #:*endian-preference*
+           ;; Date/time
+           #:datetime
+           #:make-datetime
+           #:make-date
+           #:year-of
+           #:month-of
+           #:day-of
+           #:hour-of
+           #:minute-of
+           #:sec-of
+           #:dow-of
+           ;; Span
+           #:span
+           #:span-start
+           #:span-end
+           #:span-end-included-p)
   (:import-from #:cl-ppcre #:scan))
 
