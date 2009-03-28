@@ -19,7 +19,7 @@
          with dow-index = (dow-index (tag-type repeater))
          while (/= (dow-of current) dow-index)
          do (setf current (datetime-incr current :day direction)))
-      (make-span current (datetime-incr current :day)))))
+      (make-span current (datetime-incr current :day) t))))
 
 (defmethod r-this ((repeater repeater-day-name) pointer)
   (when (member pointer (list :future :none))

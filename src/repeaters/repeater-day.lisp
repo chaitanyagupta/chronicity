@@ -15,7 +15,7 @@
       (setf current (copy-date now)))
     (let ((direction (if (eql pointer :future) 1 -1)))
       (setf current (datetime-incr current :day direction))
-      (make-span current (datetime-incr current :day)))))
+      (make-span current (datetime-incr current :day) t))))
 
 (defmethod r-this ((repeater repeater-day) pointer)
   (with-slots (current now)
@@ -28,7 +28,7 @@
                        (copy-datetime now :minute 0 :sec 0)))
           (:none (list (copy-date now)
                        (start-of-day (datetime-incr now :day)))))
-      (make-span day-start day-end))))
+      (make-span day-start day-end t))))
 
 (defmethod r-offset ((repeater repeater-day) span amount pointer)
   (let ((offset (* (if (eql pointer :future) 1 -1) amount)))
