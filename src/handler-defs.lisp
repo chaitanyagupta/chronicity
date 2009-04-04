@@ -172,7 +172,9 @@
 
 (define-handler (arrow handle-s-r-p)
     (tokens)
-    ((scalar repeater pointer))
+    (((? scalar) repeater pointer))
+  (when (= (length tokens) 2)
+    (push (create-token "1" (create-tag 'scalar 1)) tokens))
   (let ((span (parse "this second" :guess nil :now *now*)))
     (handle-srp tokens span)))
 
@@ -181,12 +183,17 @@
     ((pointer scalar repeater))
   (handle-s-r-p (list (second tokens) (third tokens) (first tokens))))
 
-(define-handler (arrow)
+(define-handler (arrow handle-s-r-p-a)
     (tokens)
     ((scalar repeater pointer (? p anchor)))
   (let ((anchor-span (awhen (nthcdr 3 tokens)
                        (get-anchor it))))
     (handle-srp tokens anchor-span)))
+
+(define-handler (arrow)
+    (tokens)
+    ((repeater pointer (? p anchor)))
+  (handle-s-r-p-a (cons (create-token "1" (create-tag 'scalar 1)) tokens)))
 
 ;;; Narrow
 

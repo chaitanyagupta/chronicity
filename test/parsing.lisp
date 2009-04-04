@@ -442,7 +442,7 @@
   (let ((*now* (make-datetime 2006 8 16 14 0 0))
         (*guess* :middle))
     ;; past
-    
+
     (assert-datetime= (make-datetime 2003 8 17 12) (parse "3 years ago tomorrow"))
     
     (assert-datetime= (make-datetime 2003 8 18 12) (parse "3 years ago this friday"))
@@ -452,6 +452,10 @@
     (assert-datetime= (make-datetime 2006 8 18 14) (parse "2 days from this second"))
     
     (assert-datetime= (make-datetime 2006 8 17 17) (parse "7 hours before tomorrow at midnight"))
+
+    (assert-datetime= (make-datetime 2006 8 14 12) (parse "day before yesterday"))
+
+    (assert-datetime= (make-datetime 2006 8 18 12) (parse "day after tomorrow"))
     
     ;; future
     ))
