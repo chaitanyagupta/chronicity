@@ -178,43 +178,6 @@ matching instance of that time will be used."
 (defgeneric scan-tokens (tag tokens)
   (:documentation "Scan the list of TOKENS and tag the appropriately."))
 
-;;; Data
-
-(defparameter *months*
-  (list :JANUARY
-        :FEBRUARY
-        :MARCH
-        :APRIL
-        :MAY
-        :JUNE
-        :JULY
-        :AUGUST
-        :SEPTEMBER
-        :OCTOBER
-        :NOVEMBER
-        :DECEMBER))
-
-(defun month-name (index)
-  (elt *months* (1- index)))
-
-(defun month-index (name)
-  (1+ (position name *months*)))
-
-(defparameter *days-of-week*
-  (list :SUNDAY
-        :MONDAY
-        :TUESDAY
-        :WEDNESDAY
-        :THURSDAY
-        :FRIDAY
-        :SATURDAY))
-
-(defun dow-index (name)
-  (position name *days-of-week*))
-
-(defun dow-name (index)
-  (elt *days-of-week* index))
-
 ;;; Disable CL-INTERPOL's special reader syntax
 
 #.(cl-interpol:disable-interpol-syntax)

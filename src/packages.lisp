@@ -13,9 +13,10 @@
            #:*guess*
            #:*ambiguous-time-range*
            #:*endian-preference*
-           ;; Date/time
+           ;; Datetime
            #:datetime
            #:make-datetime
+           #:datetimep
            #:make-date
            #:year-of
            #:month-of
@@ -25,9 +26,15 @@
            #:sec-of
            #:dow-of
            ;; Span
-           #:span
+           #:spanp
            #:span-start
            #:span-end
-           #:span-end-included-p)
+           #:span-end-included-p
+           ;; Miscellaneous datetime data
+           #:month-name
+           #:dow-name
+           ;; Token
+           #:token-word
+           #:token-tags)
   (:import-from #:cl-ppcre #:scan))
 

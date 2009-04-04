@@ -20,6 +20,9 @@
 (defun make-datetime (year &optional (month 1) (day 1) (hour 0) (minute 0) (sec 0))
   (local-time:encode-timestamp 0 sec minute hour day month year))
 
+(defun datetimep (x)
+  (typep x 'local-time:timestamp))
+
 (defun copy-date (from &key
                   (year (year-of from))
                   (month (month-of from))
@@ -208,6 +211,9 @@
 (defun make-span (start end &optional (end-included-p nil))
   (make-instance 'span :start start :end end :end-included-p end-included-p))
 
+(defun spanp (x)
+  (typep x 'span))
+
 (defun span-width (span)
   (- (datetime-to-universal (span-end span))
      (datetime-to-universal (span-start span))))
@@ -226,5 +232,40 @@
       (and (datetime<= (span-start span) datetime)
            (datetime< datetime (span-end span)))))
 
+;;; Miscellaneous data
 
+(defparameter *months*
+  (list :JANUARY
+        :FEBRUARY
+        :MARCH
+        :APRIL
+        :MAY
+        :JUNE
+        :JULY
+        :AUGUST
+        :SEPTEMBER
+        :OCTOBER
+        :NOVEMBER
+        :DECEMBER))
+
+(defun month-name (index)
+  (elt *months* (1- index)))
+
+(defun month-index (name)
+  (1+ (position name *months*)))
+
+(defparameter *days-of-week*
+  (list :SUNDAY
+        :MONDAY
+        :TUESDAY
+        :WEDNESDAY
+        :THURSDAY
+        :FRIDAY
+        :SATURDAY))
+
+(defun dow-index (name)
+  (position name *days-of-week*))
+
+(defun dow-name (index)
+  (elt *days-of-week* index))
 
