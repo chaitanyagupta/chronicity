@@ -9,7 +9,7 @@
 (cl:in-package #:chronicity-system)
 
 (defsystem #:chronicity
-  :version "0.1.1"
+  :version "0.1.2"
   :author "Chaitanya Gupta"
   :maintainer "Chaitanya Gupta"
   :depends-on (:cl-ppcre :cl-interpol :local-time)
