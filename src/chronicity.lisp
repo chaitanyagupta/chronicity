@@ -84,6 +84,7 @@ matching instance of that time will be used."
   (rr-all-f text #?/\bmidnight\b/ "24:00")
   (rr-all-f text #?/\bbefor now\b/  "past")
   (rr-all-f text #?/\bnow\b/ "this second")
+  (rr-all-f text #?r"^a(\s+)" "1\\1")
   (rr-all-f text "\\b(ago|before)\\b" "past")
   (rr-all-f text #?/\bthi past\b/ "last")
   (rr-all-f text #?/\bthi last\b/ "last")

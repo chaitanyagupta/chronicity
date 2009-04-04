@@ -378,6 +378,8 @@
         (*guess* :middle))
     ;; past
     
+    (assert-datetime= (make-datetime 2006 8 15 14) (parse "a day ago"))
+    
     (assert-datetime= (make-datetime 2003 8 16 14) (parse "3 years ago"))
     
     (assert-datetime= (make-datetime 2006 7 16 14) (parse "1 month ago"))
