@@ -9,6 +9,8 @@
 (cl:in-package #:chronicity-test-system)
 
 (defsystem #:chronicity-test
+  :author "Chaitanya Gupta"
+  :maintainer "Chaitanya Gupta"
   :depends-on (:chronicity)
   :components
   ((:module test
