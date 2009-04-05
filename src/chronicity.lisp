@@ -93,7 +93,6 @@ matching instance of that time will be used."
   (rr-all-f text #?/\btonight\b/ "this night")
   (rr-all-f text "(\\d)([ap]m|oclock)\\b" "\\1 \\2")
   (rr-all-f text "\\b(hence|after|from)\\b" "future")
-  ;; TODO: (setf text (numericize-ordinals text)) 
   text)
 
 (defun tokenize (text)

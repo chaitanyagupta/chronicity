@@ -14,46 +14,54 @@
 #.(cl-interpol:enable-interpol-syntax)
 
 (defvar *direct-nums*
-  '(("eleven" 11)
-    ("twelve" 12)
-    ("thirteen" 13)
-    ("fourteen" 14)
-    ("fifteen" 15)
-    ("sixteen" 16)
-    ("seventeen" 17)
-    ("eighteen" 18)
-    ("nineteen" 19)
-    ("ninteen" 19)                      ; Common mis-spelling
-    ("zero" 0)
-    ("one" 1)
-    ("two" 2)
-    ("three" 3)
-    (#?r"\bfour\b" 4)         ; So that it matches four but not fourty
-    ("five" 5)
-    (#?r"\bsix\b" 6)
-    (#?r"\bseven\b" 7)
-    (#?r"\beight\b" 8)
-    (#?r"\bnine\b" 9)
-    ("ten" 10)
+  '(("(eleven|eleventh)" 11)
+    ("(twelve|twelfth)" 12)
+    ("(thirteen|thirteenth)" 13)
+    ("(fourteen|fourteenth)" 14)
+    ("(fifteen|fifteenth)" 15)
+    ("(sixteen|sixteenth)" 16)
+    ("(seventeen|seventeenth)" 17)
+    ("(eighteen|eighteenth)" 18)
+    ("(nineteen|ninteen|nineteenth)" 19)    ; Common mis-spelling
+    ("(zero|zeroth)" 0)
+    ("(one|first)" 1)
+    ("two" 2) ; FIXME: How to effectively parse 'second' as a numeral without ambiguity?
+    ("(three|third)" 3)
+    (#?r"(\bfour\b|fourth|forth)" 4)         ; So that it matches four but not fourty
+    ("(five|fifth)" 5)
+    (#?r"(\bsix\b|sixth)" 6)
+    (#?r"(\bseven\b|seventh)" 7)
+    (#?r"(\beight\b|eighth)" 8)
+    (#?r"(\bnine\b|ninth|nineth)" 9)
+    ("(ten|tenth)" 10)
     ; (#?r"\ba[\b^$]" 1) ; doesn't make sense for an 'a' at the end to be a 1
     ))
 
 (defvar *ten-prefixes*
-  '(("twenty" 20)
-    ("thirty" 30)
-    ("(fourty|forty)" 40)
-    ("fifty" 50)
-    ("sixty" 60)
-    ("seventy" 70)
-    ("eighty" 80)
-    ("ninety" 90)))
+  '(("(twenty|twentieth)" 20)
+    ("(thirty|thirtieth)" 30)
+    ("(fourty|forty|fourtieth|fortieth)" 40)
+    ("(fifty|fiftieth)" 50)
+    ("(sixty|sixtieth)" 60)
+    ("(seventy|seventieth)" 70)
+    ("(eighty|eightieth)" 80)
+    ("(ninety|ninetieth)" 90)))
 
 (defvar *big-prefixes*
-  '(("hundred" 100)
-    ("thousand" 1000)
-    ("million" 1000000)
-    ("billion" 1000000000)
-    ("trillion" 1000000000000)))
+  '(("(hundred|hundredth)" 100)
+    ("(thousand|thousandth)" 1000)
+    ("(lakh|lac)" 100000)
+    ("(million|millionth)" 1000000)
+    ("crore" 10000000)
+    ("(billion|billionth)" 1000000000)
+    ("(trillion|trillionth)" 1000000000000)))
+
+(defvar *big-detector-regex*
+  (let ((big-or (format nil "(~{~A~^|~})"
+                        (mapcar #'first (append *direct-nums*
+                                                *ten-prefixes*
+                                                *big-prefixes*)))))
+    #?r"${big-or}((\s|-)+${big-or})*"))
 
 (defun numerize (string)
   ;; Some normalization
@@ -66,38 +74,41 @@
                 (detect-numeral-sequence string :start start))
          (unless start2
            (return))
-         (let ((number (numerize-aux (subseq string start2 end2))))
-           (when number
+         (let ((number-string (numerize-aux (subseq string start2 end2))))
+           (when number-string
              (setf (values string diff)
-                   (replace-numeral-sequence string start2 end2 number)))
+                   (replace-numeral-sequence string start2 end2 number-string)))
            (setf start (- end2 diff)))))
     string))
-
-(defun replace-numeral-sequence (string start end number)
-  (let ((number-string (format nil "~A" number)))
-    (values
-     (concatenate 'string
-                  (subseq string 0 start)
-                  number-string
-                  (subseq string end))
-     (- (- end start) (length number-string)))))
-
-(defun numerize-aux (string)
-  (let ((tokens (reverse (cl-ppcre:split #?r"(\s|-)+" string))))
-    (setf tokens (remove-if-not #'numeric-token-p tokens))
-    (tokens-to-number tokens)))
-
-(defvar *big-detector-regex*
-  (let ((big-or (format nil "(~{~A~^|~})"
-                        (mapcar #'first (append *direct-nums*
-                                                *ten-prefixes*
-                                                *big-prefixes*)))))
-    #?r"${big-or}((\s|-)+${big-or})*"))
 
 (defun detect-numeral-sequence (string &key (start 0))
   (cl-ppcre:scan *big-detector-regex* string :start start))
 
+(defun numerize-aux (string)
+  (let ((tokens (reverse (cl-ppcre:split #?r"(\s|-)+" string))))
+    (setf tokens (remove-if-not #'numeric-token-p tokens))
+    (let* ((number (tokens-to-number tokens))
+           (number-string (format nil "~A" number)))
+      ;; Check if the numeral was an ordinal. If so, append the
+      ;; (st|nd|rd|th) to the end of the number
+      (multiple-value-bind (match regs)
+          (cl-ppcre:scan-to-strings "(fir(st)|seco(nd)|thi(rd)|\\w+(th)$)"
+                                    (first tokens))
+        (if match
+            (concatenate 'string number-string (find-if #'identity (subseq regs 1)))
+            number-string)))))
+
+(defun replace-numeral-sequence (string start end number-string)
+  (values
+   (concatenate 'string
+                (subseq string 0 start)
+                number-string
+                (subseq string end))
+   (- (- end start) (length number-string))))
+
 (defun tokens-to-number (tokens)
+  ;; TOKENS should be in reverse order i.e. the rightmost token in the
+  ;; string should be first.
   (when (big-prefix-p (first (last tokens)))
     (setf tokens (append tokens (list "one"))))
   (let* ((sum 0)

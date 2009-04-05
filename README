@@ -192,6 +192,10 @@ Internally, LOCAL-TIME:TIMESTAMP objects are used to represent
 time. Any limitation which applies to these objects applies to
 CHRONICITY:DATETIME objects as well.
 
+Another problem is that parsing ordinals as words is supported except
+for 'second', which is ambiguous with 'second', the unit of time. This
+should be fixed in a future release.
+
 
 
 
