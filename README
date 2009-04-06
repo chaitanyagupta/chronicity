@@ -1,11 +1,13 @@
 Chronicity
 ----------
 
-A natural language date/time parser for Common Lisp.
+[http://chaitanyagupta.com/lisp/chronicity/]
+
+A natural language date and time parser for Common Lisp.
 by Chaitanya Gupta (mail@chaitanyagupta.com)
 
 Inspired by (and copied verbatim from) from Chronic, the natural
-language date/time parser for Ruby by Tom Preston-Werner.
+language date and time parser for Ruby by Tom Preston-Werner.
 [http://chronic.rubyforge.org/]
 
 
@@ -16,16 +18,22 @@ Chronicity depends on the following libraries:
   * cl-ppcre [http://weitz.de/cl-ppcre]
   * cl-interpol [http://weitz.de/cl-interpol]
   * local-time [http://common-lisp.net/project/local-time/]
-    Works with the latest release version of local-time (1.0.3) and
-    the dev version, but will break with older versions.
+    Works with release 1.0.1 and later only, will break with older
+    versions.
 
-Get Chronicity from github:
+Use ASDF-INSTALL:
+  (asdf-install:install :chronicity)
+
+Or download the latest release here:
+  http://chaitanyagupta.com/lisp/chronicity/downloads/chronicity-latest.tar.gz
+
+Or get the cutting-edge version from github:
   git clone git://github.com/chaitanyagupta/chronicity.git
 
 Use ASDF to load:
   (asdf:oos 'asdf:load-op :chronicity)
 
-Use ASDF:TEST-OP for tests:
+To run the test suite:
   (asdf:oos 'asdf:test-op :chronicity)
 
 Source code for chronicity-test includes lisp-unit
