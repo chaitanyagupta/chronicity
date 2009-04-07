@@ -7,6 +7,9 @@
 
 ;;; Date and Time constructors
 
+(deftype datetime ()
+  'local-time:timestamp)
+
 (defun make-date (year &optional (month 1) (day 1))
   (local-time:encode-timestamp 0 0 0 0 day month year))
 
@@ -19,9 +22,6 @@
 
 (defun make-datetime (year &optional (month 1) (day 1) (hour 0) (minute 0) (sec 0))
   (local-time:encode-timestamp 0 sec minute hour day month year))
-
-(defun datetimep (x)
-  (typep x 'local-time:timestamp))
 
 (defun copy-date (from &key
                   (year (year-of from))
@@ -210,9 +210,6 @@
 
 (defun make-span (start end &optional (end-included-p nil))
   (make-instance 'span :start start :end end :end-included-p end-included-p))
-
-(defun spanp (x)
-  (typep x 'span))
 
 (defun span-width (span)
   (- (datetime-to-universal (span-end span))

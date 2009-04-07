@@ -16,8 +16,8 @@
            ;; Datetime
            #:datetime
            #:make-datetime
-           #:datetimep
            #:make-date
+           #:make-time
            #:year-of
            #:month-of
            #:day-of
@@ -26,7 +26,7 @@
            #:sec-of
            #:dow-of
            ;; Span
-           #:spanp
+           #:span
            #:span-start
            #:span-end
            #:span-end-included-p
