@@ -150,7 +150,11 @@
     
     (assert-datetime= (make-datetime 2040 5 16 12) (parse "may 40"))
     
-    (assert-datetime= (make-datetime 2040 5 27 12) (parse "may 27 40"))))
+    (assert-datetime= (make-datetime 2040 5 27 12) (parse "may 27 40"))
+
+    ;; Regression fixes
+    (assert-datetime= (make-datetime 2006 8 16 23 35)
+                      (parse "today" :now (make-datetime 2006 8 16 23 10 0)))))
   
 (define-test parse-guess-r
   (let ((*now* (make-datetime 2006 8 16 14 0 0))
