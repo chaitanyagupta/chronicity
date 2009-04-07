@@ -267,12 +267,12 @@
     
     ;; day
     
-    (assert-datetime= (make-datetime 2006 8 16 19 30) (parse "this day"))
+    (assert-datetime= (make-datetime 2006 8 16 19) (parse "this day"))
     
     (assert-datetime= (make-datetime 2006 8 16 7)
                       (parse "this day" :context :past))
     
-    (assert-datetime= (make-datetime 2006 8 16 19 30) (parse "today"))
+    (assert-datetime= (make-datetime 2006 8 16 19) (parse "today"))
     
     (assert-datetime= (make-datetime 2006 8 15 12) (parse "yesterday"))
     

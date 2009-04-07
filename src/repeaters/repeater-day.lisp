@@ -22,10 +22,10 @@
       repeater
     (destructuring-bind (day-start day-end)
         (ecase pointer
-          (:future (list (start-of-hour (datetime-incr now :hour))
+          (:future (list now
                          (start-of-day (datetime-incr now :day))))
           (:past (list (copy-date now)
-                       (copy-datetime now :minute 0 :sec 0)))
+                       now))
           (:none (list (copy-date now)
                        (start-of-day (datetime-incr now :day)))))
       (make-span day-start day-end t))))
