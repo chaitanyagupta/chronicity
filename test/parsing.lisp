@@ -519,8 +519,10 @@
   (let ((*now* (make-datetime 2006 8 16 14 0 0)))
     (assert-datetime= (parse "33 days from now") (parse "thirty-three days from now"))
     (assert-datetime= (parse "2867532 seconds from now") (parse "two million eight hundred and sixty seven thousand five hundred and thirty two seconds from now"))
-    ;; assert_equal parse_now("may 10th"), parse_now("may tenth")
-    ))
+    (assert-datetime= (parse "may 10th") (parse "may tenth"))
+    (assert-datetime= (make-datetime 2006 8 1) (parse "first day in august"))
+    (assert-datetime= (make-datetime 2006 8 2) (parse "second day in august"))
+    (assert-datetime= (make-datetime 2006 8 3) (parse "third day in august"))))
   
 ;; (define-test parse-only-complete-pointers
 ;;   (let ((*now* (make-datetime 2006 8 16 14 0 0)))

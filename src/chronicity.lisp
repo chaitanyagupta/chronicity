@@ -69,6 +69,7 @@ matching instance of that time will be used."
   (loop
      for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator) ; 'timezone
      do (scan-tokens type tokens))
+  (pre-process-tokens tokens)
   ;; Guess date
   (values (guess-span (tokens-to-span tokens) guess) tokens))
 
@@ -98,6 +99,18 @@ matching instance of that time will be used."
 (defun tokenize (text)
   (mapcar #'create-token
           (cl-ppcre:split #?r"\s+" text)))
+
+(defun pre-process-tokens (tokens)
+  (dotimes (i (length tokens))
+    (symbol-macrolet ((current (elt tokens i))
+                      (next (elt tokens (1+ i))))
+      ;; Resolve ambiguity related to "second"
+      (when (and (string-equal (token-word current) "second")
+                 (and (< (1+ i) (length tokens))
+                      (find-tag 'repeater next)))
+        (untag 'repeater-sec current)
+        (tag (create-tag 'ordinal 2) current)
+        (tag (create-tag 'ordinal-day 2) current)))))
 
 (defun guess-span (span guess)
   (when span
