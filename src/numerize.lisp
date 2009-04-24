@@ -25,7 +25,8 @@
     ("(nineteen|ninteen|nineteenth)" 19)    ; Common mis-spelling
     ("(zero|zeroth)" 0)
     ("(one|first)" 1)
-    ("two" 2) ; FIXME: How to effectively parse 'second' as a numeral without ambiguity?
+    ("two" 2) ; Numerization for second is taken care of after
+              ; processing tokens, see CHRONICITY::PRE-PROCESS-TOKENS
     ("(three|third)" 3)
     (#?r"(\bfour\b|fourth|forth)" 4)         ; So that it matches four but not fourty
     ("(five|fifth)" 5)
