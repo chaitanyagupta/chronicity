@@ -109,7 +109,6 @@
   ;; next month
   (assert-datetime= (make-datetime 2009 4 1 0 0 0)
                     (datetime-incr (make-datetime 2009 3 31 0 0 0) :day))
-
   ;; next year
   (assert-datetime= (make-datetime 2010 1 1 0 0 0)
                     (datetime-incr (make-datetime 2009 12 1 0 0 0) :month)))
