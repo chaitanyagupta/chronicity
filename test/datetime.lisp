@@ -109,7 +109,37 @@
   ;; next month
   (assert-datetime= (make-datetime 2009 4 1 0 0 0)
                     (datetime-incr (make-datetime 2009 3 31 0 0 0) :day))
+
   ;; next year
   (assert-datetime= (make-datetime 2010 1 1 0 0 0)
                     (datetime-incr (make-datetime 2009 12 1 0 0 0) :month)))
+
+(define-test datetime-month-calc
+  ;; 'regular' cases
+  (assert-datetime= (make-date 2009 5 24)
+                    (datetime-incr (make-date 2009 4 24) :month))
+  (assert-datetime= (make-date 2009 5 1)
+                    (datetime-incr (make-date 2009 4 1) :month))
+
+  ;; next/previous month if on current month ending
+  (assert-datetime= (make-date 2009 5 30)
+                    (datetime-incr (make-date 2009 4 30) :month))
+  (assert-datetime= (make-date 2009 6 30)
+                    (datetime-incr (make-date 2009 5 31) :month))
+  (assert-datetime= (make-date 2009 4 30)
+                    (datetime-decr (make-date 2009 5 31) :month))
+
+  ;; february
+  (assert-datetime= (make-date 2009 2 28)
+                    (datetime-decr (make-date 2009 3 31) :month))
+  (assert-datetime= (make-date 2009 2 28)
+                    (datetime-incr (make-date 2009 1 31) :month))
+
+  ;; year change
+  (assert-datetime= (make-date 2009 1 31)
+                    (datetime-incr (make-date 2008 12 31) :month))
+  (assert-datetime= (make-date 2008 12 31)
+                    (datetime-decr (make-date 2009 1 31) :month)))
+
+
 
