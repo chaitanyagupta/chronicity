@@ -26,11 +26,7 @@
 (defun find-class-handlers (class)
   (remove class *handlers* :key #'handler-class :test (complement #'eql)))
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun make-handler-name ()
-    (intern (format nil "HANDLE-~A" (incf *gensym-counter*)) :chronicity)))
-
-(defmacro define-handler ((class &optional (name (make-handler-name)))
+(defmacro define-handler ((class &optional (name (gentemp "HANDLE-" :chronicity)))
                           lambda-list patterns
                           &body body)
   `(progn
