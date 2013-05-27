@@ -40,7 +40,7 @@ Source code for chronicity-test includes lisp-unit
 (lisp-unit.lisp). This might be cause problems (or surprises) if your
 image already uses a different version of lisp-unit.
 [http://www.cs.northwestern.edu/academics/courses/325/readings/lisp-unit.html]
-    
+
 
 Usage
 -----
@@ -52,16 +52,16 @@ date/time calculations are made with respect to "now".
 
   (setf chronicity:*now* (chronicity:make-datetime 2009 3 27 12 34 56))
   => @2009-03-27T12:34:56.000000+05:30
-  
+
   (chronicity:parse "today")
   => @2009-03-27T13:00:00.000000+05:30
-  
+
   (chronicity:parse "tomorrow" :now (chronicity:make-date 2009 1 1))
   => @2009-01-02T00:00:00.000000+05:30
-  
+
   (chronicity:parse "3 days from now")
   => @2009-03-30T12:34:56.000000+05:30
-  
+
   (chronicity:parse "next month")
   => @2009-04-01T00:00:00.000000+05:30
 
@@ -74,15 +74,15 @@ ambiguity over days and months. :LITTLE indicates the format
 
   (chronicity:parse "1/2/2003" :endian-preference :middle)
   => @2003-01-02T00:00:00.000000+05:30
-  
+
 Default value for :CONTEXT is :FUTURE.
-  
+
   (chronicity:parse "April 1st at 12:30 PM")
   => @2009-04-01T12:30:00.000000+05:30
 
   (chronicity:parse "April 1st at 12:30 PM" :context :past)
   => @2008-04-01T12:30:00.000000+05:30
-  
+
 Default for :GUESS is :START.
 
   (chronicity:parse "next month" :guess :middle)
@@ -104,10 +104,10 @@ be accessed using the datetime readers.
 
 Passing NIL as the value for :GUESS returns a SPAN, which is a range
 of datetime values.
-  
+
   (chronicity:parse "next month" :guess nil)
   => #<CHRONICITY::SPAN 2009-04-01T00:00:00.000000+05:30...2009-05-01T00:00:00.000000+05:30>
-  
+
   (values (chronicity:span-start *)
           (chronicity:span-end *)
           (chronicity:span-end-included-p *))
@@ -203,8 +203,3 @@ CHRONICITY:DATETIME objects as well.
 Another problem is that parsing ordinals as words is supported except
 for 'second', which is ambiguous with 'second', the unit of time. This
 should be fixed in a future release.
-
-
-
-
-
