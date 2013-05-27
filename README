@@ -21,8 +21,8 @@ Chronicity depends on the following libraries:
     Works with release 1.0.1 and later only, will break with older
     versions.
 
-Use ASDF-INSTALL:
-  (asdf-install:install :chronicity)
+Use quicklisp [http://www.quicklisp.org]:
+  (ql:quickload :chronicity)
 
 Or download the latest release here:
   http://chaitanyagupta.com/lisp/chronicity/downloads/chronicity-latest.tar.gz
