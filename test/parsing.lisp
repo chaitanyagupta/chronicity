@@ -84,7 +84,9 @@
     (assert-datetime= (make-datetime 1979 5 27 12) (parse "may 27, 1979"))
     
     (assert-datetime= (make-datetime 1979 5 27 12) (parse "may 27 79"))
-    
+
+    (assert-datetime= (make-datetime 1979 5 27 12) (parse "may 27th, 1979"))
+
     (assert-datetime= (make-datetime 1979 5 27 16 30) (parse "may 27 79 4:30"))
     
     (assert-datetime= (make-datetime 1979 5 27 4 30)

@@ -54,6 +54,14 @@
     (t
      (error "Wrong number of tokens passed to HANDLE-RMN-SD-ON.~%Tokens:~%~S" tokens))))
 
+(define-handler (date handle-rmn-od-sy)
+    (tokens)
+    ((repeater-month-name ordinal-day scalar-year (? separator-at) (? p time)))
+  (let* ((day-token (second tokens))
+         (day (token-tag-type 'ordinal-day day-token)))
+    (tag (create-tag 'scalar-day day) day-token)
+    (handle-rmn-sd-sy (list* (first tokens) day-token (third tokens) (nthcdr 3 tokens)))))
+
 (define-handler (date handle-rmn-od)
     (tokens)
     ((repeater-month-name ordinal-day (? separator-at) (? p time)))
