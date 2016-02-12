@@ -8,6 +8,18 @@
 (clear-handlers)
 
 ;;; Date handlers
+(define-handler (date handle-date-with-name)
+                (tokens)
+                ((repeater-day-name scalar-day repeater-month-name scalar-year repeater-time))
+  (setf tokens (remove-separators tokens))
+  (let* ((year-tag (find-tag 'scalar-year (fourth tokens)))
+         (month-name-tag (find-tag 'repeater-month-name (third tokens)))
+         (day-tag (find-tag 'scalar-day (second tokens)))
+         (date-start (make-date (tag-type year-tag)
+                                (month-index (tag-type month-name-tag))
+                                (tag-type day-tag))))
+    (merge-time-tokens-day (nthcdr 4 tokens) date-start)))
+
 
 (define-handler (date handle-rmn-sd-rt-sy)
     (tokens)
@@ -248,3 +260,5 @@
     (tokens)
     ((repeater-time (? repeater-day-portion)))
   (get-anchor (dealias-and-disambiguate-time tokens)))
+
+nil
