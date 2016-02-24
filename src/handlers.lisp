@@ -33,7 +33,8 @@
      (defun ,name ,lambda-list
        (let ((*handler-patterns* ',patterns))
          ,@body))
-     (add-handler ',class ',patterns ',name)))
+     (add-handler ',class ',patterns ',name)
+     ',name))
 
 (defun add-handler (class patterns fn)
   (let ((handlers (loop
