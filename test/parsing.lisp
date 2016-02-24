@@ -9,6 +9,16 @@
   (let ((*now* (make-datetime 2006 8 16 14 0 0))
         (*guess* :middle))
 
+    ;; rdn_sd_rmn_sy_rt
+
+    (assert-datetime= (make-datetime 2012 10 02 0 2 20)
+                      (parse "Sun, 02 October 2012 00:02:20"))
+
+    ;; rmn_sd_rt_sy
+
+    (assert-datetime= (make-datetime 2014 10 20 2 30 56)
+                      (parse "Oct 20 02:30:56 2014"))
+
     ;; rm_sd
 
     (assert-datetime= (make-datetime 2007 5 27 12) (parse "may 27"))
