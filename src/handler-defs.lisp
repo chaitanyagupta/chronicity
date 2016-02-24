@@ -9,7 +9,7 @@
 
 ;;; Date handlers
 
-(define-handler (date handle-date-with-name)
+(define-handler (date handle-rdn-sd-rmn-sy-rt)
     (tokens)
     ((repeater-day-name scalar-day repeater-month-name scalar-year repeater-time))
   (setf tokens (remove-separators tokens))
