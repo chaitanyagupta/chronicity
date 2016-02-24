@@ -9,9 +9,11 @@
 (cl:in-package #:chronicity-system)
 
 (defsystem #:chronicity
+  :description "A natural language date and time parser for Common Lisp"
   :version "0.2.7"
   :author "Chaitanya Gupta"
   :maintainer "Chaitanya Gupta"
+  :license "BSD"
   :depends-on (:cl-ppcre :cl-interpol :local-time)
   :components
   ((:module src
