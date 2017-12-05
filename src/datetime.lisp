@@ -90,28 +90,8 @@
 
 ;;; Date time Calculations
 
-;;;; Looks like LOCAL-TIME's month addition/subtraction is broken :(
-;;;; FIXME: Uses an unexported local-time symbol -- INVALID-TIME-SPECIFICATION
-(defun datetime-month+ (datetime amount)
-  (let* ((day (day-of datetime))
-         (amount-years (floor amount 12))
-         (amount-months (mod amount 12))
-         (new-year (+ (year-of datetime) amount-years))
-         (new-month (+ (month-of datetime) amount-months)))
-    (when (> new-month 12)
-      (incf new-year)
-      (decf new-month 12))
-    (loop
-       (handler-case (return (copy-datetime datetime
-                                            :day day
-                                            :year new-year
-                                            :month new-month))
-         (local-time::invalid-time-specification ()
-           (decf day))))))
-
 (defun datetime-incr (datetime unit &optional (amount 1))
   (case unit
-    (:month (datetime-month+ datetime amount))
     (:week (datetime-incr datetime :day (* 7 amount)))
     (t (local-time:timestamp+ datetime amount unit))))
 
