@@ -10,7 +10,7 @@
 
 (defsystem #:chronicity
   :description "A natural language date and time parser for Common Lisp"
-  :version "0.3.0"
+  :version "0.3.1"
   :author "Chaitanya Gupta"
   :maintainer "Chaitanya Gupta"
   :license "BSD"
