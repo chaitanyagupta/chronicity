@@ -129,6 +129,16 @@
 
 (define-handler (date)
     (tokens)
+    ((scalar-day repeater-month-name (? separator-at) (? p time)))
+  (handle-rmn-sd (list* (second tokens) (first tokens) (nthcdr 2 tokens))))
+
+(define-handler (date)
+    (tokens)
+    ((ordinal-day repeater-month-name (? separator-at) (? p time)))
+  (handle-rmn-od (list* (second tokens) (first tokens) (nthcdr 2 tokens))))
+
+(define-handler (date)
+    (tokens)
     ((scalar-year separator-slash-or-dash scalar-month separator-slash-or-dash scalar-day (? separator-at) (? p time)))
   (setf tokens (remove-separators tokens))
   (let* ((year (token-tag-type 'scalar-year (first tokens)))

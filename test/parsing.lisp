@@ -122,6 +122,38 @@
 
     (assert-datetime= (make-datetime 1979 5 27 7) (parse "27/5/1979 @ 0700"))
 
+    ;; sd_rm
+
+    (assert-datetime= (make-datetime 2007 5 27 12) (parse "27 may"))
+
+    (assert-datetime= (make-datetime 2006 5 28 12)
+                      (parse "28 may" :context :past))
+
+    (assert-datetime= (make-datetime 2006 5 28 17)
+                      (parse "28 may 5pm" :context :past))
+
+    (assert-datetime= (make-datetime 2006 5 28 17)
+                      (parse "28 may at 5pm" :context :past))
+
+    (assert-datetime= (make-datetime 2006 5 28 17 32 19)
+                      (parse "28 may at 5:32.19pm" :context :past))
+
+    ;; od_rm
+
+    (assert-datetime= (make-datetime 2007 5 27 12) (parse "27th may"))
+
+    (assert-datetime= (make-datetime 2006 5 27 12)
+                      (parse "27th may" :context :past))
+
+    (assert-datetime= (make-datetime 2006 5 27 17)
+                      (parse "27th may 5:00 pm" :context :past))
+
+    (assert-datetime= (make-datetime 2006 5 27 17)
+                      (parse "27th may at 5pm" :context :past))
+
+    (assert-datetime= (make-datetime 2007 5 27 5)
+                      (parse "27th may at 5" :ambiguous-time-range nil))
+
     ;; sm_sd
 
     (assert-datetime= (make-datetime 2007 6 5 12) (parse "05/06"))
