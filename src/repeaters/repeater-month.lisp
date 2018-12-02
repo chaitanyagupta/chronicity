@@ -25,7 +25,7 @@
           (:future (list (datetime-incr (copy-date now) :day)
                          (datetime-incr (copy-date now :day 1) :month)))
           (:past (list (copy-date now :day 1)
-                       (copy-date now)))
+                       now))
           (:none (list (copy-date now :day 1)
                        (datetime-incr (copy-date now :day 1) :month))))
       (make-span month-start month-end))))
