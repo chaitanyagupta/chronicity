@@ -278,7 +278,7 @@
 
     ;; month
 
-    (assert-datetime= (make-datetime 2006 8 24 12) (parse "this month"))
+    (assert-datetime= (make-datetime 2006 8 24 7) (parse "this month"))
 
     (assert-datetime= (make-datetime 2006 8 8 19)
                       (parse "this month" :context :past))

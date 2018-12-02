@@ -22,7 +22,7 @@
       repeater
     (destructuring-bind (month-start month-end)
         (ecase pointer
-          (:future (list (datetime-incr (copy-date now) :day)
+          (:future (list now
                          (datetime-incr (copy-date now :day 1) :month)))
           (:past (list (copy-date now :day 1)
                        now))
