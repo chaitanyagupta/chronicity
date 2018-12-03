@@ -24,7 +24,7 @@
   (with-slots (now)
       repeater
     (case pointer
-      (:future (make-span (start-of-minute (datetime-incr now :minute))
+      (:future (make-span now
                           (start-of-minute (datetime-incr now :minute))))
       (:past   (make-span (start-of-minute now)
                           now))

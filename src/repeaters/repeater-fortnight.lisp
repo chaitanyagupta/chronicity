@@ -26,9 +26,8 @@
       repeater
     (let ((sunday (start-of-week now)))
       (case pointer
-        (:future (make-span (start-of-hour (datetime-incr now :hour))
-                            (datetime-incr sunday :week 2)))
-        (:past   (make-span sunday (start-of-hour now)))
+        (:future (make-span now (datetime-incr sunday :week 2)))
+        (:past   (make-span sunday now))
         (:none   (make-span sunday (datetime-incr sunday :week 2)))))))
 
 (defmethod r-offset ((repeater repeater-fortnight) span amount pointer)

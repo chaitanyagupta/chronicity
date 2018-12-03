@@ -25,9 +25,8 @@
   (with-slots (now)
       repeater
     (ecase pointer
-      (:future (make-span (datetime-incr (start-of-hour now) :hour)
-                          (datetime-incr (start-of-week now) :week)))
-      (:past (make-span (start-of-week now) (start-of-hour now)))
+      (:future (make-span now (datetime-incr (start-of-week now) :week)))
+      (:past (make-span (start-of-week now) now))
       (:none (make-span (start-of-week now) (datetime-incr (start-of-week now) :week))))))
 
 (defmethod r-offset ((repeater repeater-week) span amount pointer)

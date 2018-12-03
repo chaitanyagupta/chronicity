@@ -37,7 +37,7 @@
          (this-hour))
 
     (setf this-hour (r-this hours :future))
-    (assert-datetime= (make-datetime 2006 8 16 14 31) (span-start this-hour))
+    (assert-datetime= (make-datetime 2006 8 16 14 30) (span-start this-hour))
     (assert-datetime= (make-datetime 2006 8 16 15) (span-end this-hour))
     
     (setf this-hour (r-this hours :past))

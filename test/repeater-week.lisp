@@ -37,7 +37,7 @@
          (this-week))
 
     (setf this-week (r-this weeks :future))
-    (assert-datetime= (make-datetime 2006 8 16 15) (span-start this-week))
+    (assert-datetime= (make-datetime 2006 8 16 14) (span-start this-week))
     (assert-datetime= (make-datetime 2006 8 20) (span-end this-week))))
 
 (define-test repeater-week-this-past

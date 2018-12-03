@@ -33,7 +33,7 @@
   (let* ((now (make-datetime 2006 8 16 14))
          (fortnights (create-tag 'repeater-fortnight :fortnight :now now))
          (this-fortnight (r-this fortnights :future)))
-    (assert-datetime= (make-datetime 2006 8 16 15) (span-start this-fortnight))
+    (assert-datetime= (make-datetime 2006 8 16 14) (span-start this-fortnight))
     (assert-datetime= (make-datetime 2006 8 27) (span-end this-fortnight))))
 
 (define-test repeater-fortnight-this-past

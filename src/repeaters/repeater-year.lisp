@@ -23,15 +23,11 @@
 (defmethod r-this ((repeater repeater-year) pointer)
   (with-slots (now)
       repeater
-    (destructuring-bind (year-start year-end)
-        (case pointer
-          (:future (list (datetime-incr (copy-date now) :day)
-                         (start-of-year (datetime-incr now :year))))
-          (:past (list (start-of-year now)
-                       (copy-date now)))
-          (:none (list (start-of-year now)
-                       (start-of-year (datetime-incr now :year)))))
-      (make-span year-start year-end))))
+    (case pointer
+      (:future (make-span now (start-of-year (datetime-incr now :year))))
+      (:past (make-span (start-of-year now) now))
+      (:none (make-span (start-of-year now)
+                        (start-of-year (datetime-incr now :year)))))))
 
 (defmethod r-offset ((repeater repeater-year) span amount pointer)
   (span+ span (* amount (if (eql pointer :future) 1 -1)) :year))

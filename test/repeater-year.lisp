@@ -37,12 +37,12 @@
          (this-year))
 
     (setf this-year (r-this years :future))
-    (assert-datetime= (make-datetime 2006 8 17) (span-start this-year))
+    (assert-datetime= (make-datetime 2006 8 16 14) (span-start this-year))
     (assert-datetime= (make-datetime 2007 1 1) (span-end this-year))
 
     (setf this-year (r-this years :past))
     (assert-datetime= (make-datetime 2006 1 1) (span-start this-year))
-    (assert-datetime= (make-datetime 2006 8 16) (span-end this-year))))
+    (assert-datetime= (make-datetime 2006 8 16 14) (span-end this-year))))
 
 (define-test repeater-year-offset
   (let* ((now (make-datetime 2006 8 16 14))

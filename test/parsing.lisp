@@ -271,9 +271,9 @@
         (*guess* :middle))
     ;; year
 
-    (assert-datetime= (make-datetime 2006 10 24 12) (parse "this year"))
+    (assert-datetime= (make-datetime 2006 10 24 7) (parse "this year"))
 
-    (assert-datetime= (make-datetime 2006 4 24 12)
+    (assert-datetime= (make-datetime 2006 4 24 19)
                       (parse "this year" :context :past))
 
     ;; month
@@ -292,14 +292,14 @@
 
     ;; fortnight
 
-    (assert-datetime= (make-datetime 2006 8 21 19 30) (parse "this fortnight"))
+    (assert-datetime= (make-datetime 2006 8 21 19) (parse "this fortnight"))
 
     (assert-datetime= (make-datetime 2006 8 14 19)
                       (parse "this fortnight" :context :past))
 
     ;; week
 
-    (assert-datetime= (make-datetime 2006 8 18 7 30) (parse "this week"))
+    (assert-datetime= (make-datetime 2006 8 18 7) (parse "this week"))
 
     (assert-datetime= (make-datetime 2006 8 14 19)
                       (parse "this week" :context :past))
