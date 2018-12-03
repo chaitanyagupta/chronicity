@@ -202,22 +202,38 @@
 
 ;;; Arrows
 
-(defun handle-srp (tokens span)
+(defun r-rough-offset (repeater amount pointer)
+  (if (zerop amount)
+      (r-this repeater pointer)
+      (let ((now (tag-now repeater))
+            (this-span (r-this repeater :none)))
+        (cond ((datetime< now (span-start this-span))
+               (r-offset repeater
+                         (r-next repeater pointer)
+                         (if (eq pointer :past) amount (1- amount))
+                         pointer))
+              ((datetime> now (span-end this-span))
+               (r-offset repeater
+                         this-span
+                         (if (eq pointer :future) amount (1- amount))
+                         pointer))
+              (t (r-offset repeater this-span amount pointer))))))
+
+(defun handle-srp (tokens &optional now)
   (let ((distance (tag-type (find-if #'(lambda (x)
                                          (eql (type-of x) 'scalar))
                                      (token-tags (first tokens)))))
         (repeater (find-tag 'repeater (second tokens)))
         (pointer (token-tag-type 'pointer (third tokens))))
-    (when (and repeater span)
-      (r-offset repeater span distance pointer))))
+    (setf (tag-now repeater) (or now *now*))
+    (r-rough-offset repeater distance pointer)))
 
 (define-handler (arrow handle-s-r-p)
     (tokens)
     (((? scalar) repeater pointer))
   (when (= (length tokens) 2)
     (push (create-token "1" (create-tag 'scalar 1)) tokens))
-  (let ((span (parse "this second" :guess nil :now *now*)))
-    (handle-srp tokens span)))
+  (handle-srp tokens))
 
 (define-handler (arrow handle-p-s-r)
     (tokens)
@@ -229,7 +245,8 @@
     ((scalar repeater pointer (? p anchor)))
   (let ((anchor-span (awhen (nthcdr 3 tokens)
                        (get-anchor it))))
-    (handle-srp tokens anchor-span)))
+    (handle-srp tokens (or (span-default anchor-span)
+                           (span-start anchor-span)))))
 
 (define-handler (arrow)
     (tokens)

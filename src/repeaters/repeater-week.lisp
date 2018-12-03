@@ -27,7 +27,10 @@
     (ecase pointer
       (:future (make-span now (datetime-incr (start-of-week now) :week)))
       (:past (make-span (start-of-week now) now))
-      (:none (make-span (start-of-week now) (datetime-incr (start-of-week now) :week))))))
+      (:none (make-span (start-of-week now)
+                        (datetime-incr (start-of-week now) :week)
+                        nil
+                        now)))))
 
 (defmethod r-offset ((repeater repeater-week) span amount pointer)
   (span+ span (* amount (if (eql pointer :future) 1 -1)) :week))

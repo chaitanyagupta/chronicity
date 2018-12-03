@@ -30,6 +30,7 @@
            #:span-start
            #:span-end
            #:span-end-included-p
+           #:span-default
            ;; Miscellaneous datetime data
            #:month-name
            #:dow-name

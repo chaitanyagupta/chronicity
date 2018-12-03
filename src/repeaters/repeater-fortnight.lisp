@@ -28,7 +28,7 @@
       (case pointer
         (:future (make-span now (datetime-incr sunday :week 2)))
         (:past   (make-span sunday now))
-        (:none   (make-span sunday (datetime-incr sunday :week 2)))))))
+        (:none   (make-span sunday (datetime-incr sunday :week 2) nil now))))))
 
 (defmethod r-offset ((repeater repeater-fortnight) span amount pointer)
   (span+ span (* 2 amount (if (eql pointer :future) 1 -1)) :week))

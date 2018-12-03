@@ -29,7 +29,9 @@
       (:past   (make-span (start-of-minute now)
                           now))
       (:none   (make-span (start-of-minute now)
-                          (start-of-minute (datetime-incr now :minute)))))))
+                          (start-of-minute (datetime-incr now :minute))
+                          nil
+                          now)))))
 
 (defmethod r-offset ((repeater repeater-minute) span amount pointer)
   (span+ span (* amount (if (eql pointer :future) 1 -1)) :minute))

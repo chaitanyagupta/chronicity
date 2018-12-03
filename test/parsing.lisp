@@ -423,7 +423,7 @@
 
 (define-test parse-guess-s-r-p
   (let ((*now* (make-datetime 2006 8 16 14 0 0))
-        (*guess* :middle))
+        (*guess* t))
     ;; past
 
     (assert-datetime= (make-datetime 2006 8 15 14) (parse "a day ago"))
@@ -445,7 +445,7 @@
     ;;time = parse_now("1 monday ago")
     ;;assert_equal Time.local(2006, 8, 14, 12), time
 
-    (assert-datetime= (make-datetime 2006 8 12 9) (parse "5 mornings ago"))
+    (assert-datetime= (make-datetime 2006 8 12 6) (parse "5 mornings ago"))
 
     (assert-datetime= (make-datetime 2006 8 16 7) (parse "7 hours ago"))
 
@@ -469,7 +469,7 @@
 
     (assert-datetime= (make-datetime 2006 8 17 14) (parse "1 day hence"))
 
-    (assert-datetime= (make-datetime 2006 8 21 9) (parse "5 mornings hence"))
+    (assert-datetime= (make-datetime 2006 8 21 6) (parse "5 mornings hence"))
 
     (assert-datetime= (make-datetime 2006 8 16 15) (parse "1 hour from now"))
 
@@ -488,12 +488,12 @@
 
 (define-test parse-guess-s-r-p-a
   (let ((*now* (make-datetime 2006 8 16 14 0 0))
-        (*guess* :middle))
+        (*guess* t))
     ;; past
 
-    (assert-datetime= (make-datetime 2003 8 17 12) (parse "3 years ago tomorrow"))
+    (assert-datetime= (make-datetime 2003 8 17 0) (parse "3 years ago tomorrow"))
 
-    (assert-datetime= (make-datetime 2003 8 18 12) (parse "3 years ago this friday"))
+    (assert-datetime= (make-datetime 2003 8 18 0) (parse "3 years ago this friday"))
 
     (assert-datetime= (make-datetime 2006 5 19 17) (parse "3 months ago saturday at 5:00 pm"))
 
@@ -501,9 +501,9 @@
 
     (assert-datetime= (make-datetime 2006 8 17 17) (parse "7 hours before tomorrow at midnight"))
 
-    (assert-datetime= (make-datetime 2006 8 14 12) (parse "day before yesterday"))
+    (assert-datetime= (make-datetime 2006 8 14 0) (parse "day before yesterday"))
 
-    (assert-datetime= (make-datetime 2006 8 18 12) (parse "day after tomorrow"))
+    (assert-datetime= (make-datetime 2006 8 18 0) (parse "day after tomorrow"))
 
     ;; future
     ))

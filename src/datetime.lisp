@@ -182,7 +182,10 @@
         :reader span-end)
    (end-included-p :initarg :end-included-p
                    :reader span-end-included-p
-                   :initform nil)))
+                   :initform nil)
+   (default :initarg :default
+            :reader span-default
+            :initform nil)))
 
 (defmethod print-object ((x span) stream)
   (flet ((!format-span ()
@@ -195,20 +198,32 @@
           (!format-span))
         (!format-span))))
 
-(defun make-span (start end &optional (end-included-p nil))
-  (make-instance 'span :start start :end end :end-included-p end-included-p))
+(defun make-span (start end &optional end-included-p default)
+  (make-instance 'span :start start :end end :end-included-p end-included-p :default default))
 
 (defun span-width (span)
   (- (datetime-to-universal (span-end span))
      (datetime-to-universal (span-start span))))
 
+(defun span-middle (span)
+  (universal-to-datetime
+   (truncate (+ (datetime-to-universal (span-start span))
+                (datetime-to-universal (span-end span)))
+             2)))
+
 (defun span+ (span amount unit)
   (make-span (datetime-incr (span-start span) unit amount)
-             (datetime-incr (span-end span) unit amount)))
+             (datetime-incr (span-end span) unit amount)
+             (span-end-included-p span)
+             (awhen (span-default span)
+               (datetime-incr (span-default span) unit amount))))
 
 (defun span- (span amount unit)
   (make-span (datetime-decr (span-start span) unit amount)
-             (datetime-decr (span-end span) unit amount)))
+             (datetime-decr (span-end span) unit amount)
+             (span-end-included-p span)
+             (awhen (span-default span)
+               (datetime-decr (span-default span) unit amount))))
 
 (defun span-includes-p (span datetime)
   (if (span-end-included-p span)
