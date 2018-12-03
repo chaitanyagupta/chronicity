@@ -15,6 +15,14 @@
 (defclass repeater (tag)
   ())
 
+(defgeneric r-next (repeater pointer))
+
+(defgeneric r-this (repeater pointer))
+
+(defgeneric r-offset (repeater span amount pointer))
+
+(defgeneric r-width (repeater))
+
 (defmethod scan-tokens ((tag (eql 'repeater)) tokens)
   (dolist (token tokens tokens)
     (awhen (scan-for-month-names token) (tag it token))
