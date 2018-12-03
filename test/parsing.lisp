@@ -549,7 +549,8 @@
       (assert-datetime= (make-date 2006 8 21) (span-end span)))))
 
 (define-test parse-with-endian-precedence
-  (let ((date-string "11/2/2007")
+  (let ((*guess* :start)
+        (date-string "11/2/2007")
         (expect-little-endian (make-datetime 2007 2 11))
         (expect-middle-endian (make-datetime 2007 11 2)))
     ;; Default: little endian
@@ -560,7 +561,8 @@
     (assert-datetime= expect-middle-endian (parse date-string :endian-preference :middle))))
 
 (define-test parse-words
-  (let ((*now* (make-datetime 2006 8 16 14 0 0)))
+  (let ((*guess* :start)
+        (*now* (make-datetime 2006 8 16 14 0 0)))
     (assert-datetime= (parse "33 days from now") (parse "thirty-three days from now"))
     (assert-datetime= (parse "2867532 seconds from now") (parse "two million eight hundred and sixty seven thousand five hundred and thirty two seconds from now"))
     (assert-datetime= (parse "may 10th") (parse "may tenth"))
