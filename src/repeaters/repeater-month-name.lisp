@@ -16,13 +16,12 @@
                (now-month (month-of now))
                (now-year (year-of now))
                (target-year (ecase pointer
-                              (:future (cond ((< now-month target-month) now-year)
-                                             ((> now-month target-month) (1+ now-year))))
+                              (:future (cond ((<= now-month target-month) now-year)
+                                             (t (1+ now-year))))
                               (:none (cond ((<= now-month target-month) now-year)
                                            (t (1+ now-year))))
-                              (:past (cond ((> now-month target-month) now-year)
-                                           ((< now-month target-month) (1- now-year)))))))
-          (or target-year (error "TARGET-YEAR should have been set by now."))
+                              (:past (cond ((>= now-month target-month) now-year)
+                                           (t (1- now-year)))))))
           (setf current (make-date target-year target-month)))
         (ecase pointer
           (:future (setf current (datetime-incr current :year 1)))
