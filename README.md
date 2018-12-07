@@ -19,12 +19,7 @@ Or get the cutting-edge version from github:
 Or get the latest stable release (usually updates before quicklisp):
   https://github.com/chaitanyagupta/chronicity/releases
 
-Source code for chronicity-test includes [lisp-unit][]. This might be
-cause problems (or surprises) if your image already uses a different
-version of lisp-unit.
-
 [quicklisp]: https://www.quicklisp.org
-[lisp-unit]: https://www.cliki.net/lisp-unit
 
 ## Usage
 

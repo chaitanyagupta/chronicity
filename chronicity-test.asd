@@ -11,13 +11,12 @@
 (defsystem #:chronicity-test
   :author "Chaitanya Gupta"
   :maintainer "Chaitanya Gupta"
-  :depends-on (:chronicity)
+  :depends-on ("chronicity" "lisp-unit")
   :components
   ((:module test
             :serial t
             :components 
-            ((:file "lisp-unit")
-             (:file "packages")
+            ((:file "packages")
              (:file "utils")
              (:file "numerize")
              (:file "datetime")
