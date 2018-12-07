@@ -20,8 +20,8 @@
             :serial t
             :components
             ((:file "packages")
-             (:file "datetime")
              (:file "utils")
+             (:file "datetime")
              (:file "numerize")
              (:file "chronicity")
              (:file "repeater")

@@ -32,7 +32,7 @@
 (defvar *endian-preference* :little
   "The default value for :ENDIAN-PREFERENCE.")
 
-(defvar *guess* :start
+(defvar *guess* t
   "The default value for :GUESS.")
 
 (defvar *ambiguous-time-range* 6
@@ -55,7 +55,9 @@ relative to which the date/time will be calculated.
 
 GUESS (default *GUESS*) if NIL, PARSE returns a SPAN object, otherwise
 returns the start, end or middle of the span if the it is :START, :END
-or :MIDDLE respectively.
+or :MIDDLE respectively. If it is T, it will return the default value
+of a span if it has one (SPAN-DEFAULT), otherwise it will return the
+start of span.
 
 For AMBIGUOUS-TIME-RANGE (default *AMBIGUOUS-TIME-RANGE*), if an
 integer is given, ambiguous times (like 5:00) will be assumed to be
@@ -115,14 +117,13 @@ matching instance of that time will be used."
 (defun guess-span (span guess)
   (when span
     (ecase guess
+      ((t) (or (span-default span)
+               (span-start span)))
       (:start (span-start span))
       (:end (if (span-end-included-p span)
                 (span-end span)
                 (datetime-decr (span-end span) :sec)))
-      (:middle (universal-to-datetime
-                (truncate (+ (datetime-to-universal (span-start span))
-                             (datetime-to-universal (span-end span)))
-                          2)))
+      (:middle (span-middle span))
       ((nil) span))))
 
 (defclass token ()

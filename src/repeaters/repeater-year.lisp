@@ -27,7 +27,9 @@
       (:future (make-span now (start-of-year (datetime-incr now :year))))
       (:past (make-span (start-of-year now) now))
       (:none (make-span (start-of-year now)
-                        (start-of-year (datetime-incr now :year)))))))
+                        (start-of-year (datetime-incr now :year))
+                        nil
+                        now)))))
 
 (defmethod r-offset ((repeater repeater-year) span amount pointer)
   (span+ span (* amount (if (eql pointer :future) 1 -1)) :year))
