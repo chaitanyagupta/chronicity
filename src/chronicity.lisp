@@ -43,8 +43,7 @@
               ((:now *now*) (or *now* (now)))
               (guess *guess*)
               ((:ambiguous-time-range *ambiguous-time-range*) *ambiguous-time-range*)
-              ((:endian-preference *endian-preference*) *endian-preference*)
-              &aux tokens)
+              ((:endian-preference *endian-preference*) *endian-preference*))
   "Parse the string in TEXT and return either a DATETIME or a SPAN
   object. Also returns a list of tokens as the second value.
 
@@ -66,14 +65,9 @@ example, if you set it to 7, then the parser will look for the time
 between 7am and 7pm. In the case of 5:00, it would assume that means
 5:00pm. If NIL is given, no assumption will be made, and the first
 matching instance of that time will be used."
-  (setf text (pre-normalize text))
-  (setf tokens (tokenize text))
-  (loop
-     for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator) ; 'timezone
-     do (scan-tokens type tokens))
-  (pre-process-tokens tokens)
-  ;; Guess date
-  (values (guess-span (tokens-to-span tokens) guess) tokens))
+  (let ((tokens (tokenize-and-tag (pre-normalize text))))
+    (pre-process-tokens tokens)
+    (values (guess-span (tokens-to-span tokens) guess) tokens)))
 
 (defun pre-normalize (text)
   (setf text (string-downcase text))
@@ -101,6 +95,13 @@ matching instance of that time will be used."
 (defun tokenize (text)
   (mapcar #'create-token
           (cl-ppcre:split #?r"\s+" text)))
+
+(defun tokenize-and-tag (text)
+  (let ((tokens (tokenize text)))
+    (loop
+       for type in (list 'repeater 'grabber 'pointer 'scalar 'ordinal 'separator)
+       do (scan-tokens type tokens))
+    tokens))
 
 (defun pre-process-tokens (tokens)
   (dotimes (i (length tokens))
