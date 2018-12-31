@@ -418,8 +418,11 @@
         (*guess* :middle))
     (assert-datetime= (make-datetime 2006 8 15 15) (parse "afternoon yesterday"))
 
-    (assert-datetime= (make-datetime 2006 8 8 12) (parse "tuesday last week"))
-    ))
+    (assert-datetime= (make-datetime 2006 8 15 14) (parse "2 PM yesterday"))
+
+    (assert-datetime= (make-datetime 2006 8 15 14 30) (parse "2:30 yesterday"))
+
+    (assert-datetime= (make-datetime 2006 8 8 12) (parse "tuesday last week"))))
 
 (define-test parse-guess-s-r-p
   (let ((*now* (make-datetime 2006 8 16 14 0 0))

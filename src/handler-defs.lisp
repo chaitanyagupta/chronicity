@@ -192,13 +192,9 @@
 (define-handler (anchor handle-r)
     (tokens)
     (((? grabber) repeater (? separator-at) (? repeater) (? repeater))
-     ((? grabber) repeater repeater (? separator-at) (? repeater) (? repeater)))
+     ((? grabber) repeater repeater (? separator-at) (? repeater) (? repeater))
+     (repeater (? repeater) grabber repeater))
   (get-anchor (dealias-and-disambiguate-time tokens)))
-
-(define-handler (anchor)
-    (tokens)
-    ((repeater grabber repeater))
-  (handle-r (list (second tokens) (first tokens) (third tokens))))
 
 ;;; Arrows
 
