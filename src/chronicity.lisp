@@ -64,7 +64,10 @@ within the range of that time in the AM to that time in the PM. For
 example, if you set it to 7, then the parser will look for the time
 between 7am and 7pm. In the case of 5:00, it would assume that means
 5:00pm. If NIL is given, no assumption will be made, and the first
-matching instance of that time will be used."
+matching instance of that time will be used.
+
+Use ENDIAN-PREFERENCE (default *ENDIAN-PREFERENCE*) to specify whether to
+ambiguous dates as dd/mm (:LITTLE) or mm/dd (:MIDDLE)."
   (let ((tokens (tokenize-and-tag (pre-normalize text))))
     (pre-process-tokens tokens)
     (values (guess-span (tokens-to-span tokens) guess) tokens)))
