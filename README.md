@@ -7,6 +7,9 @@ language date and time parser for Ruby by Tom Preston-Werner.
 
 [Chronic]: http://chronic.rubyforge.org/
 
+To understand how Chronicity works, read this post: [Writing a natural language
+date and time parser](https://lisper.in/nlp-date-parser)
+
 ## Download and Installation
 
 Use [quicklisp][]:
